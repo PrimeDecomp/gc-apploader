@@ -234,7 +234,7 @@ else:
             Object(MatchingFor('20020328'), 'runtime/s_frexp.c'),
         ], src_dir='extern/sdk'),
         DolphinLib('card', [
-            Object(NonMatching, 'dolphin/card/CARDBios.c'),
+            Object(Matching, 'dolphin/card/CARDBios.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/card/CARDUnlock.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/card/CARDRdwr.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/card/CARDBlock.c', cflags=cflags_trailer),
