@@ -246,12 +246,12 @@ else:
         ]),
         DolphinLib('si', [
             Object(NonMatching, 'dolphin/si/SIBios.c'),
-            Object(NonMatching, 'dolphin/si/SISamplingRate.c'),
+            Object(Matching, 'dolphin/si/SISamplingRate.c', cflags=cflags_trailer),
         ]),
         DolphinLib('exi', [
             Object(Matching, 'dolphin/exi/EXIBios.c', cflags=cflags_trailer,
                    extra_cflags=['-schedule off'] if args.version == '20040521' else []),
-            Object(NonMatching, 'dolphin/exi/EXIUart.c'),
+            Object(Matching, 'dolphin/exi/EXIUart.c', cflags=cflags_trailer),
         ]),
     ]
 

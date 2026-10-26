@@ -3,6 +3,8 @@
 
 #include "dolphin/types.h"
 
+#define VI_CLOCK_SEL 54
+
 #ifdef __MWERKS__
 volatile u16 __VIRegs[59] : 0xCC002000;
 volatile u32 __PIRegs[12] : 0xCC003000;
