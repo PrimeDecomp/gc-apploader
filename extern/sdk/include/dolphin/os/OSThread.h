@@ -54,6 +54,7 @@ struct OSThread {
 };
 
 void OSCancelThread(OSThread* thread);
+void OSWakeupThread(OSThreadQueue* queue);
 
 s32 OSEnableScheduler(void);
 s32 OSDisableScheduler(void);

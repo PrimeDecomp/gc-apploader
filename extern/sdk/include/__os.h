@@ -10,6 +10,7 @@ int __OSCallResetFunctions(BOOL final);
 void __OSShutdownDevices(BOOL doRecal);
 void __OSDoHotReset(u32 resetCode);
 void __OSStopAudioSystem(void);
+void __OSUnlockAllMutex(OSThread* thread);
 void OSGetSavedRegion(void** start, void** end);
 void __OSBootDolSimple(u32 doloffset, u32 restartCode, void* regionStart, void* regionEnd,
                        BOOL argsUseDefault, s32 argc, char** argv);
