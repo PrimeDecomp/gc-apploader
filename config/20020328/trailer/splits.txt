@@ -62,15 +62,15 @@ dolphin/os/OSInterrupt.c:
 	.data       start:0x81317E70 end:0x81317EA0
 	.sbss       start:0x81318D28 end:0x81318D40
 
-runtime/ansi_files.c:
-	.data       start:0x81318920 end:0x813189F8
-
 dolphin/os/OSLink.c:
 	.text       start:0x813047A4 end:0x813047BC
 
 dolphin/os/OSMemory.c:
 	.text       start:0x813047BC end:0x81304A9C
 	.data       start:0x81317EA0 end:0x81317EB0
+
+runtime/ansi_files.c:
+	.data       start:0x81318920 end:0x813189F8
 
 dolphin/os/OSReset.c:
 	.text       start:0x81304A9C end:0x81304C08
