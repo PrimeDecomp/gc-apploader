@@ -193,6 +193,7 @@ else:
             Object(Matching, 'dolphin/os/OSInterrupt.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSLink.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/os/OSMemory.c'),
+            Object(MatchingFor('20040521'), 'dolphin/os/OSReboot.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSReset.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/os/OSRtc.c'),
             Object(Matching, 'dolphin/os/OSSync.c', cflags=cflags_trailer),
