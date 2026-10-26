@@ -25,6 +25,8 @@ subprocess.run(shlex.split(os.environ.get('CC', 'cc')) + [
     '-std=c99', '-O2', '-Wall', '-Wextra', '-Werror', 'tools/apploader.c', '-o', str(tool)
 ], check=True)
 for part in ['loader', 'trailer']:
+    if not (root / part / 'config.yml').is_file():
+        continue
     elf = original / f'{part}.elf'
     subprocess.run([str(tool), 'to-elf', str(image), part, str(elf)], check=True)
     # ALF retains explicit BSS boundaries when there is no SDK initialization table.

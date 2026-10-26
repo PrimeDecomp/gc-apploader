@@ -1,0 +1,6 @@
+name: loader
+object: orig/20010522D/loader.alf
+symbols: config/20010522D/loader/symbols.txt
+splits: config/20010522D/loader/splits.txt
+mw_comment_version: 8
+write_asm: true

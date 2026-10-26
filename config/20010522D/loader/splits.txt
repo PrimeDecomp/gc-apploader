@@ -1,0 +1,38 @@
+Sections:
+	.init       type:code align:32
+	.text       type:code align:32
+	.rodata     type:rodata align:32
+	.data       type:data align:32
+	.bss        type:bss align:32
+	.sdata      type:data align:32
+	.sbss       type:bss align:32
+	.sdata2     type:rodata align:8
+
+apploader/Apploader.c:
+	.text       start:0x81200160 end:0x81200A00
+	.data       start:0x81204DE0 end:0x812051C0
+	.bss        start:0x81205E80 end:0x81205FD4
+
+dolphin/PPCArch.c:
+	.text       start:0x81200A00 end:0x81200A14
+
+dolphin/os/OS.c:
+	.text       start:0x81200A14 end:0x81200A48
+
+dolphin/os/OSAddress.c:
+	.text       start:0x81200A48 end:0x81200A9C
+
+dolphin/os/OSCache.c:
+	.text       start:0x81200A9C end:0x81200B00
+
+dolphin/os/OSError.c:
+	.text       start:0x81200B08 end:0x81200CAC
+
+dolphin/os/OSInterrupt.c:
+	.text       start:0x81201954 end:0x81201E10
+
+dolphin/os/OSTime.c:
+	.text       start:0x81201E10 end:0x81201E28
+
+runtime/__mem.c:
+	.init       start:0x81200000 end:0x81200144

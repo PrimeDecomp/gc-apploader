@@ -7,7 +7,7 @@ from tools.project import Object, ProjectConfig, calculate_progress, generate_bu
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('mode', nargs='?', choices=['configure', 'progress'], default='configure')
-VERSIONS = ['20020328']
+VERSIONS = ['20020328', '20010522', '20010522D', '20040521']
 parser.add_argument('-v', '--version', choices=VERSIONS, default=VERSIONS[0])
 parser.add_argument('--part', choices=['loader', 'trailer'], default='loader')
 parser.add_argument('--dtk', type=Path)
@@ -23,6 +23,8 @@ args = parser.parse_args()
 root = Path('config') / args.version
 if not root.is_dir() or Path(args.version).name != args.version:
     parser.error('unknown version; add config/VERSION first')
+if not (root / args.part / 'config.yml').is_file():
+    parser.error('this version has no selected component')
 config = ProjectConfig()
 config.version = f'{args.version}/{args.part}'
 config.config_path = root / args.part / 'config.yml'
@@ -98,8 +100,13 @@ if args.part == 'loader':
             Object(MatchingFor('20020328'), 'dolphin/PPCArch.c'),
         ]),
         DolphinLib('os', [
+            Object(NonMatching, 'dolphin/os/OS.c'),
             Object(MatchingFor('20020328'), 'dolphin/os/OSAddress.c'),
             Object(MatchingFor('20020328'), 'dolphin/os/OSCache.c'),
+            Object(NonMatching, 'dolphin/os/OSError.c'),
+            Object(NonMatching, 'dolphin/os/OSExec.c'),
+            Object(NonMatching, 'dolphin/os/OSInterrupt.c'),
+            Object(NonMatching, 'dolphin/os/OSTime.c'),
         ]),
         Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
             Object(MatchingFor('20020328'), 'runtime/__mem.c'),

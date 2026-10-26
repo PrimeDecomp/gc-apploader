@@ -1,0 +1,6 @@
+name: trailer
+object: orig/20040521/trailer.alf
+symbols: config/20040521/trailer/symbols.txt
+splits: config/20040521/trailer/splits.txt
+mw_comment_version: 8
+write_asm: true

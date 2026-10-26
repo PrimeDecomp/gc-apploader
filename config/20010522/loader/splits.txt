@@ -1,0 +1,19 @@
+Sections:
+	.init       type:code align:32
+	.text       type:code align:32
+	.data       type:data align:32
+	.bss        type:bss align:32
+
+apploader/Apploader.c:
+	.text       start:0x81200100 end:0x81200928
+	.data       start:0x812009A0 end:0x81200D80
+	.bss        start:0x81200D80 end:0x81200ED4
+
+dolphin/PPCArch.c:
+	.text       start:0x81200928 end:0x8120093C
+
+dolphin/os/OSCache.c:
+	.text       start:0x8120093C end:0x812009A0
+
+runtime/__mem.c:
+	.init       start:0x81200000 end:0x812000F4
