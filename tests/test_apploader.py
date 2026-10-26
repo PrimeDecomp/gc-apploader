@@ -122,6 +122,21 @@ class ConverterTests(unittest.TestCase):
     def test_flat_trailer_round_trip(self):
         self.round_trip(image(trailer_data=trailer(False)))
 
+    def test_small_constants_keep_leading_zero(self):
+        for last_access in [0x806d802c, 0xc86d8028]:
+            with self.subTest(last_access=hex(last_access)):
+                body = loader()
+                body.extend(bytes(0x40))
+                body[0x30:0x3c] = words(0x806d8020, last_access, 0x4e800020)
+                body[0xe0:0x100] = bytes([1]) * 0x20
+                body[0x118:0x120] = struct.pack('>d', 1.0)
+                original = image()[:32] + body
+                original[20:24] = words(len(body))
+                _, elf, _, _ = self.round_trip(original)
+                entries = sections(elf.read_bytes())
+                self.assertEqual(entries['.sbss'][3:6:2], (0x81200100, 0x10))
+                self.assertEqual(entries['.sdata2'][3:6:2], (0x81200110, 0x10))
+
     def test_dol_trailer_round_trip(self):
         self.round_trip(image(trailer_data=trailer(True)))
 

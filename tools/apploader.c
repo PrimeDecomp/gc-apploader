@@ -157,6 +157,19 @@ static uint32_t zero_end(const unsigned char* body, uint32_t size, uint32_t star
   return start;
 }
 
+static uint32_t memory_access_size(uint32_t word) {
+  unsigned op = word >> 26;
+  if (op < 32 || op > 55)
+    return 0;
+  if (op == 46 || op == 47)
+    return (32 - ((word >> 21) & 31)) * 4;
+  if (op >= 48)
+    return (op & 2) ? 8 : 4;
+  if (op >= 40)
+    return 2;
+  return (op & 2) ? 1 : 4;
+}
+
 static Layout loader_layout(Buffer image) {
   Layout l = {0};
   const unsigned char* body = image.data + 32;
@@ -253,16 +266,17 @@ static Layout loader_layout(Buffer image) {
   add_section(&l, ".data", strings, LOADER_ADDRESS + strings, bss - strings, 1, 3, 32);
   add_section(&l, ".bss", bss, LOADER_ADDRESS + bss, bssEnd - bss, 8, 3, 32);
   if (bssEnd < size) {
-    uint32_t smallBss = size, smallEnd, smallData2;
+    uint32_t smallBss = size, smallEnd, smallData2, referencedEnd;
     if (bssEnd & 31)
       fail("unaligned initialized data after loader BSS");
     /* EABI r13 is based 0x8000 bytes above .sdata. Its zero-filled targets
      * identify .sbss; floating-point constants follow in .sdata2. */
     for (i = 0; i + 4 <= codeEnd; i += 4) {
-      uint32_t word = be32(body + i), op = word >> 26;
-      if (((word >> 16) & 31) == 13 && op >= 32 && op <= 47) {
+      uint32_t word = be32(body + i), width = memory_access_size(word);
+      if (((word >> 16) & 31) == 13 && width) {
         int64_t target = (int64_t)bssEnd + 0x8000 + (int16_t)word;
-        if (target >= bssEnd && target + 4 <= size && !be32(body + target) &&
+        if (target >= bssEnd && target + width <= size &&
+            zero_end(body, (uint32_t)target + width, (uint32_t)target) == target + width &&
             (uint32_t)target < smallBss)
           smallBss = (uint32_t)target;
       }
@@ -270,8 +284,19 @@ static Layout loader_layout(Buffer image) {
     if (smallBss == size || (smallBss & 31))
       fail("cannot locate loader small BSS");
     smallEnd = zero_end(body, size, smallBss);
-    smallData2 = smallEnd & ~7u;
-    if (smallData2 <= smallBss || smallData2 >= size)
+    /* A zero-valued floating-point constant can extend the zero run beyond
+     * .sbss. Bound the section by the extent of its r13 accesses instead. */
+    referencedEnd = smallBss;
+    for (i = 0; i + 4 <= codeEnd; i += 4) {
+      uint32_t word = be32(body + i), width = memory_access_size(word);
+      if (((word >> 16) & 31) == 13 && width) {
+        int64_t target = (int64_t)bssEnd + 0x8000 + (int16_t)word;
+        if (target >= smallBss && target + width <= smallEnd && target + width > referencedEnd)
+          referencedEnd = (uint32_t)target + width;
+      }
+    }
+    smallData2 = alignup(referencedEnd, 8);
+    if (smallData2 <= smallBss || smallData2 > smallEnd || smallData2 >= size)
       fail("cannot locate loader small constants");
     add_section(&l, ".sdata", bssEnd, LOADER_ADDRESS + bssEnd, smallBss - bssEnd, 1, 3, 32);
     add_section(&l, ".sbss", smallBss, LOADER_ADDRESS + smallBss, smallData2 - smallBss, 8, 3, 32);
