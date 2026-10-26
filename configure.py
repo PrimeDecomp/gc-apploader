@@ -92,17 +92,17 @@ def DolphinLib(name, objects):
 if args.part == 'loader':
     config.libs = [
         Library('Apploader', 'GC/1.2.5n', cflags_apploader, [
-            Object(NonMatching, 'apploader/Apploader.c'),
+            Object(MatchingFor('20020328'), 'apploader/Apploader.c'),
         ]),
         DolphinLib('base', [
-            Object(NonMatching, 'dolphin/PPCArch.c'),
+            Object(MatchingFor('20020328'), 'dolphin/PPCArch.c'),
         ]),
         DolphinLib('os', [
-            Object(NonMatching, 'dolphin/os/OSAddress.c'),
-            Object(NonMatching, 'dolphin/os/OSCache.c'),
+            Object(MatchingFor('20020328'), 'dolphin/os/OSAddress.c'),
+            Object(MatchingFor('20020328'), 'dolphin/os/OSCache.c'),
         ]),
         Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
-            Object(NonMatching, 'runtime/__mem.c'),
+            Object(MatchingFor('20020328'), 'runtime/__mem.c'),
         ], src_dir='extern/sdk'),
     ]
 else:
