@@ -159,6 +159,21 @@ dolphin/card/CARDDir.c:
 dolphin/card/CARDCheck.c:
 	.text       start:0x81314E3C end:0x81315DA4
 
+dolphin/card/CARDOpen.c:
+	.text       start:0x813168A8 end:0x81316D3C
+
+dolphin/card/CARDCreate.c:
+	.text       start:0x81316D3C end:0x813170D4
+
+dolphin/card/CARDRead.c:
+	.text       start:0x813170D4 end:0x81317548
+
+dolphin/card/CARDWrite.c:
+	.text       start:0x81317548 end:0x813178C4
+
+dolphin/card/CARDStat.c:
+	.text       start:0x813178C4 end:0x81317BD0
+
 dolphin/os/__start.c:
 	.init       start:0x81300000 end:0x81300168
 
