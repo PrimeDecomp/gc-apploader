@@ -2,6 +2,7 @@
 #define _DOLPHIN_OS
 
 #include "dolphin/dvd.h"
+#include "dolphin/gx/GXStruct.h"
 #include "dolphin/os/OSArena.h"
 #include "dolphin/os/OSContext.h"
 #include "dolphin/os/OSError.h"
@@ -39,6 +40,7 @@ volatile u16 __OSDeviceCode AT_ADDRESS(0x800030E6);
 #define OS_CONSOLE_ARTHUR 0x10000002
 
 void OSInit(void);
+void OSFatal(GXColor fg, GXColor bg, const char* msg);
 BOOL OSDisableInterrupts(void);
 BOOL OSEnableInterrupts(void);
 BOOL OSRestoreInterrupts(BOOL level);

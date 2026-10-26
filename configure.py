@@ -180,6 +180,8 @@ else:
             Object(Matching, 'dolphin/dvd/dvdqueue.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/dvd/dvderror.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/dvd/dvdidutils.c', cflags=cflags_trailer),
+            Object(MatchingFor('20040521'), 'dolphin/dvd/dvdFatal.c', cflags=cflags_trailer,
+                   shift_jis=True),
             Object(Matching, 'dolphin/dvd/fstload.c', cflags=cflags_trailer),
         ]),
         DolphinLib('os', [
