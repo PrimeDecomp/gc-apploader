@@ -187,10 +187,10 @@ dolphin/card/CARDDir.c:
 	.text       start:0x8131138C end:0x813115F0
 
 dolphin/card/CARDCheck.c:
-	.text       start:0x813115F0 end:0x81312504
+	.text       start:0x813115F0 end:0x81312558
 
 dolphin/card/CARDMount.c:
-	.text       start:0x81312504 end:0x81312FE8
+	.text       start:0x81312558 end:0x81312FE8
 
 dolphin/card/CARDOpen.c:
 	.text       start:0x81312FE8 end:0x813132E4

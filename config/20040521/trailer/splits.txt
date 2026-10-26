@@ -156,6 +156,9 @@ dolphin/card/CARDBlock.c:
 dolphin/card/CARDDir.c:
 	.text       start:0x81314BD8 end:0x81314E3C
 
+dolphin/card/CARDCheck.c:
+	.text       start:0x81314E3C end:0x81315DA4
+
 dolphin/os/__start.c:
 	.init       start:0x81300000 end:0x81300168
 
