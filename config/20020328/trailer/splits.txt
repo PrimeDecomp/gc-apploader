@@ -21,7 +21,6 @@ reboot/Constants.c:
 	.rodata     start:0x813170C0 end:0x8131726E
 
 runtime/Destructors.c:
-	.ctors      start:0x81317080 end:0x81317080
 	.dtors      start:0x813170A0 end:0x813170A4
 
 reboot/Reboot.c:

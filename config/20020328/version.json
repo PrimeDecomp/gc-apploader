@@ -4,11 +4,13 @@
   "parts": {
     "loader": {
       "linker": "GC/1.2.5n",
-      "libraries": []
+      "libraries": [],
+      "entry": "ApploaderEntry"
     },
     "trailer": {
       "linker": "GC/1.2.5n",
-      "libraries": []
+      "libraries": [],
+      "entry": "__start"
     }
   }
 }

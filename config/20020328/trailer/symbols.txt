@@ -1,5 +1,5 @@
-fn_81300000 = .init:0x81300000; // type:function size:0x2C
-fn_8130002C = .init:0x8130002C; // type:function size:0x1C
+__start = .init:0x81300000; // type:function size:0x2C
+__init_registers = .init:0x8130002C; // type:function size:0x1C
 __init_data = .init:0x81300048; // type:function size:0xC0
 __init_hardware = .init:0x81300108; // type:function size:0x20
 __flush_cache = .init:0x81300128; // type:function size:0x34
