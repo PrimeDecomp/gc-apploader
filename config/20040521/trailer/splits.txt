@@ -113,6 +113,14 @@ dolphin/dvd/dvderror.c:
 dolphin/dvd/dvdidutils.c:
 	.text       start:0x8130EAE0 end:0x8130EBD8
 
+dolphin/dvd/dvdFatal.c:
+	.text       start:0x8130EBD8 end:0x8130ED04
+	.rodata     start:0x81319700 end:0x81319718
+	.data       start:0x8131B4C0 end:0x8131B870
+	.sdata2     start:0x8131C188 end:0x8131C190
+	.sdata      start:0x8131C208 end:0x8131C210
+	.sbss       start:0x8131C430 end:0x8131C434
+
 dolphin/dvd/fstload.c:
 	.text       start:0x8130ED04 end:0x8130EF44
 	.data       start:0x8131B870 end:0x8131B8E0
