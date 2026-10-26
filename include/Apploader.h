@@ -10,6 +10,16 @@ typedef void (*ApploaderInitCallback)(ApploaderReport report);
 typedef BOOL (*ApploaderMainCallback)(void** address, u32* length, u32* offset);
 typedef void* (*ApploaderFinalCallback)(void);
 
+typedef void (*ApploaderEntryCallback)(ApploaderInitCallback*, ApploaderMainCallback*,
+                                       ApploaderFinalCallback*);
+typedef struct {
+  char date[16];
+  ApploaderEntryCallback entry;
+  u32 size;
+  u32 trailerSize;
+  u32 padding;
+} ApploaderHeader;
+
 typedef struct {
   u32 textOffsets[7];
   u32 dataOffsets[11];
