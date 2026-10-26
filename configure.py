@@ -170,9 +170,9 @@ else:
             Object(Matching, 'dolphin/db.c', cflags=cflags_trailer),
         ]),
         DolphinLib('dsp', [
-            Object(NonMatching, 'dolphin/dsp/dsp.c'),
-            Object(NonMatching, 'dolphin/dsp/dsp_debug.c'),
-            Object(NonMatching, 'dolphin/dsp/dsp_task.c'),
+            Object(Matching, 'dolphin/dsp/dsp.c', cflags=cflags_trailer),
+            Object(Matching, 'dolphin/dsp/dsp_debug.c', cflags=cflags_trailer),
+            Object(NonMatching, 'dolphin/dsp/dsp_task.c', cflags=cflags_trailer),
         ]),
         DolphinLib('dvd', [
             Object(NonMatching, 'dolphin/dvd/dvdlow.c'),
@@ -207,7 +207,7 @@ else:
             Object(NonMatching, 'dolphin/os/__ppc_eabi_init.c'),
         ]),
         DolphinLib('pad', [
-            Object(NonMatching, 'dolphin/pad/Pad.c', cflags=cflags_trailer,
+            Object(MatchingFor('20020328'), 'dolphin/pad/Pad.c', cflags=cflags_trailer,
                    extra_cflags=['-schedule off']),
         ]),
         DolphinLib('vi', [

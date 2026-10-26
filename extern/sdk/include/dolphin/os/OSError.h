@@ -33,9 +33,11 @@ void OSPanic(const char* file, int line, const char* msg, ...);
 #ifdef DEBUG
 #define ASSERTLINE(line, cond) ((cond) || (OSPanic(__FILE__, line, "Failed assertion " #cond), 0))
 #define ASSERTMSGLINE(line, cond, msg) ((cond) || (OSPanic(__FILE__, line, msg), 0))
+#define ASSERTMSG1LINE(line, cond, msg, arg1) ((cond) || (OSPanic(__FILE__, line, msg, arg1), 0))
 #else
 #define ASSERTLINE(line, cond) ((void)0)
 #define ASSERTMSGLINE(line, cond, msg) ((void)0)
+#define ASSERTMSG1LINE(line, cond, msg, arg1) ((void)0)
 #endif
 
 OSErrorHandler OSSetErrorHandler(OSError error, OSErrorHandler handler);
