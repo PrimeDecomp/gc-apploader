@@ -37,6 +37,9 @@ typedef struct DVDDriveInfo {
 } DVDDriveInfo;
 
 void DVDInit(void);
+BOOL DVDCheckDisk(void);
+s32 DVDGetCommandBlockStatus(DVDCommandBlock* block);
+BOOL DVDSetAutoInvalidation(BOOL autoInval);
 BOOL DVDLowWaitCoverClose(void (*callback)(u32 intType));
 BOOL DVDInquiryAsync(DVDCommandBlock* block, DVDDriveInfo* info, DVDCBCallback callback);
 BOOL DVDReadAbsAsyncForBS(DVDCommandBlock* block, void* addr, s32 length, s32 offset,

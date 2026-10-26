@@ -4,6 +4,7 @@
 #include "dolphin/types.h"
 
 #define OS_RESETCODE_RESTART 0x80000000
+#define OS_RESETCODE_SYSTEM 0x40000000
 
 typedef struct OSResetFunctionInfo OSResetFunctionInfo;
 typedef BOOL (*OSResetFunction)(BOOL final);

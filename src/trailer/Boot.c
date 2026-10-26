@@ -1,15 +1,85 @@
 #include "BS2.h"
+#include "__os.h"
+#include "dolphin/base/PPCArch.h"
 #include "dolphin/os.h"
+#include "dolphin/os/OSReset.h"
+#include "dolphin/os/OSTime.h"
+#include <stdlib.h>
 #include <string.h>
 
+#if SDK_VERSION < 20040521
 u32 ResetCode;
 u32 RebootCode AT_ADDRESS(0x817ffffc);
 u32 RebootArgument AT_ADDRESS(0x817ffff8);
 u32 RebootParameter;
 static double FpuZero;
 
+#endif
+
 static void BootResetMemory(void);
 
+#if SDK_VERSION >= 20040521
+static BOOL BootIsDebugDevice(void) {
+  DVDCommandBlock block;
+  u8 buffer[64];
+  DVDDriveInfo* info;
+  OSTime start;
+
+  if ((*(u16*)0x800030e4 & 0xeef) != 0xeef) {
+    return FALSE;
+  }
+  info = (DVDDriveInfo*)(((u32)buffer + 31) & ~31);
+  DVDInquiryAsync(&block, info, NULL);
+  start = OSGetTime();
+  while (DVDGetCommandBlockStatus(&block) != DVD_STATE_END) {
+    if (!DVDCheckDisk() || OS_TIMER_CLOCK < OSGetTime() - start) {
+      __OSDoHotReset(0);
+    }
+  }
+  *(u16*)0x800030e6 = info->deviceCode | 0x8000;
+  return info->deviceCode == 1 ? TRUE : FALSE;
+}
+
+void main(int argc, char** argv) {
+  int i;
+  u32 dolOffset;
+  void* regionStart;
+  void* regionEnd;
+  BOOL argsUseDefault;
+
+  BootResetMemory();
+  OSInit();
+  DVDInit();
+  DVDSetAutoInvalidation(TRUE);
+  if (BootIsDebugDevice()) {
+    CRCMain(0, NULL);
+  }
+  OSReport("Received %d arguments\n", argc);
+  for (i = 0; i < argc; i++) {
+    OSReport("argv[%d] is %s\n", i, argv[i]);
+  }
+  dolOffset = atoi(argv[0]);
+  OSGetSavedRegion(&regionStart, &regionEnd);
+  if (OSGetResetCode() & OS_RESETCODE_SYSTEM) {
+    OSReport("This is for exec\n");
+    argsUseDefault = FALSE;
+  } else {
+    OSReport("This is for reboot\n");
+    argsUseDefault = TRUE;
+  }
+  OSSetArenaLo((void*)0x81280000);
+  OSSetArenaHi((void*)0x812f0000);
+  __OSShutdownDevices(TRUE);
+  __OSBootDolSimple(dolOffset, OSGetResetCode(), regionStart, regionEnd, argsUseDefault, argc - 1,
+                    argv + 1);
+}
+
+// The trailer overrides the SDK's reporting hooks.
+void OSReport(const char* msg, ...) {}
+
+void OSPanic(const char* file, int line, const char* msg, ...) { PPCHalt(); }
+
+#else
 void main(void) {
   ResetCode = RebootCode;
   RebootParameter = RebootArgument;
@@ -75,6 +145,8 @@ static asm void BootClearFPRs(void) {
 }
 /* clang-format on */
 
+#endif
+
 static void BootResetMemory(void) {
   OSBootInfo* bootInfo = (OSBootInfo*)0x80000000;
   bootInfo->arenaHi = 0;
@@ -84,5 +156,7 @@ static void BootResetMemory(void) {
   memset((void*)0x800000f4, 0, 4);
   memset((void*)0x80003000, 0, 0xc0);
   memset((void*)0x800030c8, 0, 0xc);
+#if SDK_VERSION < 20040521
   BootClearFPRs();
+#endif
 }

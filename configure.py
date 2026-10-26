@@ -89,6 +89,9 @@ elif args.version == '20040521':
     cflags_dolphin += ['-O4,p', '-inline auto', '-sym on', '-schedule off']
 cflags_trailer = [*cflags_base, '-DSDK_VERSION=' + apploader_version, '-O4,p', '-inline auto',
                   '-sym on', '-sdata 8', '-sdata2 8']
+cflags_reboot = [*cflags_trailer, '-inline off']
+if args.version == '20040521':
+    cflags_reboot += ['-O4,s', '-use_lmw_stmw on']
 cflags_runtime = [*cflags_base, '-i extern/sdk/runtime', '-O4,p', '-inline deferred,auto', '-str reuse',
                   '-sdata 8', '-sdata2 8']
 
@@ -154,11 +157,10 @@ if args.part == 'loader':
     ]
 else:
     config.libs = [
-        Library('Trailer', 'GC/1.2.5n', cflags_apploader, [
-            Object(NonMatching, 'trailer/Boot.c', cflags=cflags_trailer),
-            Object(MatchingFor('20020328'), 'trailer/BS2Mach.c', cflags=cflags_trailer,
-                   extra_cflags=['-inline off']),
-            Object(MatchingFor('20020328'), 'trailer/CRC.c', cflags=cflags_trailer),
+        Library('Trailer', 'GC/1.2.5n', cflags_reboot, [
+            Object(MatchingFor('20040521'), 'trailer/Boot.c'),
+            Object(MatchingFor('20020328'), 'trailer/BS2Mach.c'),
+            Object(MatchingFor('20020328'), 'trailer/CRC.c'),
             Object(NonMatching, 'trailer/CRCMain.c'),
         ]),
         DolphinLib('base', [
