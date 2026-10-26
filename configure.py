@@ -184,7 +184,7 @@ else:
         DolphinLib('os', [
             Object(NonMatching, 'dolphin/os/__start.c'),
             Object(NonMatching, 'dolphin/os/OS.c'),
-            Object(NonMatching, 'dolphin/os/OSAlarm.c'),
+            Object(Matching, 'dolphin/os/OSAlarm.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSArena.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSAudioSystem.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSCache.c', cflags=cflags_trailer),

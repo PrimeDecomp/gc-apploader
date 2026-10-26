@@ -11,5 +11,6 @@ typedef u32 OSTick;
 OSTime OSGetTime(void);
 OSTick OSGetTick(void);
 OSTime __OSGetSystemTime(void);
+OSTime __OSTimeToSystemTime(OSTime time);
 
 #endif

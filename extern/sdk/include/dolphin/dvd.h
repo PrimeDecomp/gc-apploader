@@ -37,6 +37,8 @@ typedef struct DVDDriveInfo {
 } DVDDriveInfo;
 
 void DVDInit(void);
+struct OSAlarm;
+BOOL __DVDTestAlarm(const struct OSAlarm* alarm);
 BOOL DVDCheckDisk(void);
 s32 DVDGetCommandBlockStatus(DVDCommandBlock* block);
 BOOL DVDSetAutoInvalidation(BOOL autoInval);
