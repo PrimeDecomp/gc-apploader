@@ -117,10 +117,11 @@ if args.part == 'loader':
             Object(MatchingFor('20020328', '20010522D', '20040521'), 'dolphin/os/OSAddress.c',
                    extra_cflags=['-opt peephole'] if args.version == '20010522D' else []),
             Object(Matching, 'dolphin/os/OSCache.c'),
+            Object(MatchingFor('20010522D'), 'dolphin/os/OSContext.c'),
             Object(NonMatching, 'dolphin/os/OSError.c'),
             Object(MatchingFor('20040521'), 'dolphin/os/OSExec.c'),
             Object(NonMatching, 'dolphin/os/OSInterrupt.c'),
-            Object(NonMatching, 'dolphin/os/OSTime.c'),
+            Object(MatchingFor('20010522D'), 'dolphin/os/OSTime.c'),
         ]),
         Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
             Object(Matching, 'runtime/__mem.c'),
