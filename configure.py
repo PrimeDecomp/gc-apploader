@@ -236,9 +236,9 @@ else:
         DolphinLib('card', [
             Object(NonMatching, 'dolphin/card/CARDBios.c'),
             Object(NonMatching, 'dolphin/card/CARDUnlock.c'),
-            Object(NonMatching, 'dolphin/card/CARDRdwr.c'),
-            Object(NonMatching, 'dolphin/card/CARDBlock.c'),
-            Object(NonMatching, 'dolphin/card/CARDDir.c'),
+            Object(Matching, 'dolphin/card/CARDRdwr.c', cflags=cflags_trailer),
+            Object(Matching, 'dolphin/card/CARDBlock.c', cflags=cflags_trailer),
+            Object(Matching, 'dolphin/card/CARDDir.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/card/CARDCheck.c'),
             Object(NonMatching, 'dolphin/card/CARDMount.c'),
             Object(NonMatching, 'dolphin/card/CARDOpen.c'),
