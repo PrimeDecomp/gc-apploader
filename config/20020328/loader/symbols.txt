@@ -1,5 +1,5 @@
-memset = .text:0x81200000; // type:function size:0x30
-__fill_mem = .text:0x81200030; // type:function size:0xC4
+memset = .init:0x81200000; // type:function size:0x30
+__fill_mem = .init:0x81200030; // type:function size:0xC4
 ApploaderLimitRead = .text:0x81200100; // type:function size:0xA8
 ApploaderReadController = .text:0x812001A8; // type:function size:0x8C
 OSGetConsoleType = .text:0x81200234; // type:function size:0x34

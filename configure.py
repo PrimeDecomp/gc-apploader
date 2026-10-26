@@ -65,52 +65,122 @@ def MatchingFor(*versions):
 
 
 cflags_base = [
-    '-nodefaults', '-proc gekko', '-align powerpc', '-enum int', '-fp hardware',
-    '-lang c', '-sdata 0', '-sdata2 0', '-i include',
+    '-nodefaults', '-nosyspath', '-proc gekko', '-align powerpc', '-enum int', '-fp hardware',
+    '-lang c', '-Cpp_exceptions off', '-sdata 0', '-sdata2 0',
+    '-i include', '-i extern/sdk/include', '-i extern/sdk/libc',
 ]
 cflags_apploader = [
-    *cflags_base, '-O0', '-opt peephole', '-use_lmw_stmw on', '-pool on', '-str reuse',
+    *cflags_base, '-O0', '-sym on', '-opt peephole', '-use_lmw_stmw on', '-pool on', '-str reuse',
 ]
-cflags_runtime = [*cflags_base, '-O4,p', '-inline off', '-str reuse']
+cflags_runtime = [*cflags_base, '-O4,p', '-inline deferred,auto', '-str reuse']
 
 
-def Library(name, compiler, flags, objects):
+def Library(name, compiler, flags, objects, src_dir='src'):
     return {
         'lib': name,
+        'src_dir': src_dir,
         'mw_version': compiler,
         'cflags': flags,
         'objects': objects,
     }
 
 
+def DolphinLib(name, objects):
+    return Library(name, 'GC/1.2.5n', cflags_base, objects, src_dir='extern/sdk')
+
+
 if args.part == 'loader':
     config.libs = [
-        Library('Runtime', 'GC/1.2.5n', cflags_runtime, [
-            Object(NonMatching, 'runtime/__mem.c'),
-        ]),
         Library('Apploader', 'GC/1.2.5n', cflags_apploader, [
             Object(NonMatching, 'apploader/Apploader.c'),
         ]),
-        Library('Dolphin', 'GC/1.2.5n', cflags_base, [
+        DolphinLib('base', [
             Object(NonMatching, 'dolphin/PPCArch.c'),
+        ]),
+        DolphinLib('os', [
             Object(NonMatching, 'dolphin/os/OSAddress.c'),
             Object(NonMatching, 'dolphin/os/OSCache.c'),
         ]),
+        Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
+            Object(NonMatching, 'runtime/__mem.c'),
+        ], src_dir='extern/sdk'),
     ]
 else:
     config.libs = [
-        Library('Reboot', 'GC/1.2.5n', cflags_apploader, [
-            Object(NonMatching, 'reboot/Reboot.c'),
-            Object(NonMatching, 'reboot/Constants.c'),
-            Object(NonMatching, 'reboot/Data.c'),
+        Library('Trailer', 'GC/1.2.5n', cflags_apploader, [
+            Object(NonMatching, 'trailer/Boot.c'),
+            Object(NonMatching, 'trailer/BS2Mach.c'),
+            Object(NonMatching, 'trailer/CRC.c'),
+            Object(NonMatching, 'trailer/CRCMain.c'),
         ]),
-        Library('Dolphin', 'GC/1.2.5n', cflags_base, [
-            Object(NonMatching, 'dolphin/SDK.c'),
+        DolphinLib('base', [
+            Object(NonMatching, 'dolphin/PPCArch.c'),
         ]),
-        Library('Runtime', 'GC/1.2.5n', cflags_runtime, [
-            Object(NonMatching, 'runtime/Startup.c'),
-            Object(NonMatching, 'runtime/Runtime.c'),
-            Object(NonMatching, 'runtime/Destructors.c'),
+        DolphinLib('db', [
+            Object(NonMatching, 'dolphin/db.c'),
+        ]),
+        DolphinLib('dsp', [
+            Object(NonMatching, 'dolphin/dsp/dsp.c'),
+            Object(NonMatching, 'dolphin/dsp/dsp_debug.c'),
+            Object(NonMatching, 'dolphin/dsp/dsp_task.c'),
+        ]),
+        DolphinLib('dvd', [
+            Object(NonMatching, 'dolphin/dvd/dvdlow.c'),
+            Object(NonMatching, 'dolphin/dvd/dvd.c'),
+            Object(NonMatching, 'dolphin/dvd/dvdqueue.c'),
+            Object(NonMatching, 'dolphin/dvd/dvderror.c'),
+            Object(NonMatching, 'dolphin/dvd/dvdidutils.c'),
+        ]),
+        DolphinLib('os', [
+            Object(NonMatching, 'dolphin/os/__start.c'),
+            Object(NonMatching, 'dolphin/os/OS.c'),
+            Object(NonMatching, 'dolphin/os/OSAlarm.c'),
+            Object(NonMatching, 'dolphin/os/OSArena.c'),
+            Object(NonMatching, 'dolphin/os/OSAudioSystem.c'),
+            Object(NonMatching, 'dolphin/os/OSCache.c'),
+            Object(NonMatching, 'dolphin/os/OSContext.c'),
+            Object(NonMatching, 'dolphin/os/OSError.c'),
+            Object(NonMatching, 'dolphin/os/OSInterrupt.c'),
+            Object(NonMatching, 'dolphin/os/OSLink.c'),
+            Object(NonMatching, 'dolphin/os/OSMemory.c'),
+            Object(NonMatching, 'dolphin/os/OSReset.c'),
+            Object(NonMatching, 'dolphin/os/OSRtc.c'),
+            Object(NonMatching, 'dolphin/os/OSSync.c'),
+            Object(NonMatching, 'dolphin/os/OSThread.c'),
+            Object(NonMatching, 'dolphin/os/OSTime.c'),
+            Object(NonMatching, 'dolphin/os/__ppc_eabi_init.c'),
+        ]),
+        DolphinLib('vi', [
+            Object(NonMatching, 'dolphin/vi.c'),
+        ]),
+        Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
+            Object(NonMatching, 'runtime/__mem.c'),
+            Object(NonMatching, 'runtime/__va_arg.c'),
+            Object(NonMatching, 'runtime/global_destructor_chain.c'),
+            Object(NonMatching, 'runtime/CPlusLibPPC.c'),
+            Object(NonMatching, 'runtime/runtime.c'),
+            Object(NonMatching, 'runtime/MSL.c'),
+        ], src_dir='extern/sdk'),
+        DolphinLib('card', [
+            Object(NonMatching, 'dolphin/card/CARDBios.c'),
+            Object(NonMatching, 'dolphin/card/CARDUnlock.c'),
+            Object(NonMatching, 'dolphin/card/CARDRdwr.c'),
+            Object(NonMatching, 'dolphin/card/CARDBlock.c'),
+            Object(NonMatching, 'dolphin/card/CARDDir.c'),
+            Object(NonMatching, 'dolphin/card/CARDCheck.c'),
+            Object(NonMatching, 'dolphin/card/CARDMount.c'),
+            Object(NonMatching, 'dolphin/card/CARDOpen.c'),
+            Object(NonMatching, 'dolphin/card/CARDCreate.c'),
+            Object(NonMatching, 'dolphin/card/CARDRead.c'),
+            Object(NonMatching, 'dolphin/card/CARDWrite.c'),
+            Object(NonMatching, 'dolphin/card/CARDStat.c'),
+        ]),
+        DolphinLib('si', [
+            Object(NonMatching, 'dolphin/si/SIBios.c'),
+            Object(NonMatching, 'dolphin/si/SISamplingRate.c'),
+        ]),
+        DolphinLib('exi', [
+            Object(NonMatching, 'dolphin/exi/EXIBios.c'),
         ]),
     ]
 

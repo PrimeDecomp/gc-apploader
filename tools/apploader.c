@@ -166,7 +166,22 @@ static Layout loader_layout(Buffer image) {
     fail("cannot establish loader code/data/BSS boundaries from its references");
   if (l.entry >= LOADER_ADDRESS + data)
     fail("loader entry overlaps detected data");
-  add_section(&l, ".text", 0, LOADER_ADDRESS, data, 1, 6, 32);
+  /* The SDK memory routines precede the main code in .init. Recover the
+   * section boundary from the zero-filled alignment gap before the entry. */
+  for (i = 4; i + 4 <= l.entry - LOADER_ADDRESS; i += 4) {
+    uint32_t next = i;
+    if (be32(body + i - 4) != 0x4e800020 || be32(body + i))
+      continue;
+    while (next + 4 <= data && !be32(body + next))
+      next += 4;
+    if (next > i && next < data && !(next & 31)) {
+      add_section(&l, ".init", 0, LOADER_ADDRESS, i, 1, 6, 32);
+      add_section(&l, ".text", next, LOADER_ADDRESS + next, data - next, 1, 6, 32);
+      break;
+    }
+  }
+  if (!l.count)
+    add_section(&l, ".text", 0, LOADER_ADDRESS, data, 1, 6, 32);
   add_section(&l, ".data", data, LOADER_ADDRESS + data, bss - data, 1, 3, 32);
   add_section(&l, ".bss", bss, LOADER_ADDRESS + bss, size - bss, 8, 3, 32);
   return l;

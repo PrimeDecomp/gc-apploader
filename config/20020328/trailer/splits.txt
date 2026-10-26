@@ -10,27 +10,166 @@ Sections:
 	.sdata2     type:rodata align:32
 	.bss        type:bss align:16
 
-reboot/Data.c:
-	.data       start:0x81317280 end:0x81318C34
-	.sdata      start:0x81318C40 end:0x81318CB0
-	.sbss       start:0x81318CC0 end:0x81318F04
-	.sdata2     start:0x81318F20 end:0x81318F58
-	.bss        start:0x81318F60 end:0x8131A570
+trailer/Boot.c:
+	.text       start:0x81300340 end:0x813004C0
+	.data       start:0x81317280 end:0x81317298
 
-reboot/Constants.c:
-	.rodata     start:0x813170C0 end:0x8131726E
+trailer/BS2Mach.c:
+	.text       start:0x813004C0 end:0x81300920
+	.data       start:0x81317298 end:0x813173D0
 
-runtime/Destructors.c:
+trailer/CRC.c:
+	.text       start:0x81300920 end:0x81300BB8
+
+trailer/CRCMain.c:
+	.text       start:0x81300BB8 end:0x81301C1C
+	.data       start:0x813173D0 end:0x81317508
+
+dolphin/PPCArch.c:
+	.text       start:0x81301C1C end:0x81301CA8
+
+dolphin/os/OS.c:
+	.text       start:0x81301CA8 end:0x813025C4
+
+dolphin/os/OSAlarm.c:
+	.text       start:0x813025C4 end:0x81302C6C
+
+dolphin/os/OSArena.c:
+	.text       start:0x81302C6C end:0x81302CB8
+
+dolphin/os/OSAudioSystem.c:
+	.text       start:0x81302CB8 end:0x81302F4C
+
+dolphin/os/OSCache.c:
+	.text       start:0x81302F4C end:0x81303370
+
+dolphin/os/OSContext.c:
+	.text       start:0x81303370 end:0x81303B1C
+
+dolphin/os/OSError.c:
+	.text       start:0x81303B1C end:0x81303F3C
+
+dolphin/os/OSInterrupt.c:
+	.text       start:0x81303F3C end:0x813047A4
+
+dolphin/os/OSLink.c:
+	.text       start:0x813047A4 end:0x813047BC
+
+dolphin/os/OSMemory.c:
+	.text       start:0x813047BC end:0x81304A9C
+
+dolphin/os/OSReset.c:
+	.text       start:0x81304A9C end:0x81304C08
+
+dolphin/os/OSRtc.c:
+	.text       start:0x81304C08 end:0x813054E0
+
+dolphin/os/OSSync.c:
+	.text       start:0x813054E0 end:0x81305564
+
+dolphin/os/OSThread.c:
+	.text       start:0x81305564 end:0x81305B3C
+
+dolphin/os/OSTime.c:
+	.text       start:0x81305B3C end:0x81305BC0
+
+dolphin/os/__start.c:
+	.init       start:0x81300000 end:0x81300108
+
+dolphin/os/__ppc_eabi_init.c:
+	.init       start:0x81300108 end:0x8130015C
+	.text       start:0x81305BC0 end:0x81305C54
+
+dolphin/exi/EXIBios.c:
+	.text       start:0x81305C54 end:0x813071A4
+
+dolphin/si/SIBios.c:
+	.text       start:0x813071A4 end:0x8130883C
+
+dolphin/si/SISamplingRate.c:
+	.text       start:0x8130883C end:0x81308944
+
+dolphin/db.c:
+	.text       start:0x81308944 end:0x81308A30
+
+dolphin/dvd/dvdlow.c:
+	.text       start:0x81308A30 end:0x813098A8
+
+dolphin/dvd/dvd.c:
+	.text       start:0x813098A8 end:0x8130BD78
+
+dolphin/dvd/dvdqueue.c:
+	.text       start:0x8130BD78 end:0x8130BF70
+
+dolphin/dvd/dvderror.c:
+	.text       start:0x8130BF70 end:0x8130C108
+
+dolphin/dvd/dvdidutils.c:
+	.text       start:0x8130C108 end:0x8130C2D8
+
+dolphin/vi.c:
+	.text       start:0x8130C2D8 end:0x8130DDDC
+
+dolphin/dsp/dsp.c:
+	.text       start:0x8130DDDC end:0x8130DFA0
+
+dolphin/dsp/dsp_task.c:
+	.text       start:0x8130DFA0 end:0x8130E824
+
+dolphin/dsp/dsp_debug.c:
+	.text       start:0x8130E824 end:0x8130E828
+
+dolphin/card/CARDBios.c:
+	.text       start:0x8130E828 end:0x8130FB44
+
+dolphin/card/CARDUnlock.c:
+	.text       start:0x8130FB44 end:0x81310DA4
+
+dolphin/card/CARDRdwr.c:
+	.text       start:0x81310DA4 end:0x81311024
+
+dolphin/card/CARDBlock.c:
+	.text       start:0x81311024 end:0x8131138C
+
+dolphin/card/CARDDir.c:
+	.text       start:0x8131138C end:0x813115F0
+
+dolphin/card/CARDCheck.c:
+	.text       start:0x813115F0 end:0x81312504
+
+dolphin/card/CARDMount.c:
+	.text       start:0x81312504 end:0x81312FE8
+
+dolphin/card/CARDOpen.c:
+	.text       start:0x81312FE8 end:0x813132E4
+
+dolphin/card/CARDCreate.c:
+	.text       start:0x813132E4 end:0x8131367C
+
+dolphin/card/CARDRead.c:
+	.text       start:0x8131367C end:0x81313AF4
+
+dolphin/card/CARDWrite.c:
+	.text       start:0x81313AF4 end:0x81313E70
+
+dolphin/card/CARDStat.c:
+	.text       start:0x81313E70 end:0x81314194
+
+runtime/__va_arg.c:
+	.text       start:0x81314194 end:0x81314288
+
+runtime/global_destructor_chain.c:
+	.text       start:0x81314288 end:0x813142D0
 	.dtors      start:0x813170A0 end:0x813170A4
 
-reboot/Reboot.c:
-	.text       start:0x81300340 end:0x81301C1C
+runtime/CPlusLibPPC.c:
+	.text       start:0x813142D0 end:0x8131432C
 
-dolphin/SDK.c:
-	.text       start:0x81301C1C end:0x81314288
+runtime/runtime.c:
+	.text       start:0x8131432C end:0x813146A4
 
-runtime/Runtime.c:
-	.text       start:0x81314288 end:0x8131706C
+runtime/MSL.c:
+	.text       start:0x813146A4 end:0x8131706C
 
-runtime/Startup.c:
-	.init       start:0x81300000 end:0x813002A0
+runtime/__mem.c:
+	.init       start:0x8130015C end:0x813002A0

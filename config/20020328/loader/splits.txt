@@ -1,10 +1,8 @@
 Sections:
+	.init       type:code align:32
 	.text       type:code align:32
 	.data       type:data align:32
 	.bss        type:bss align:32
-
-runtime/__mem.c:
-	.text       start:0x81200000 end:0x81200100
 
 apploader/Apploader.c:
 	.text       start:0x81200100 end:0x81200D64
@@ -19,3 +17,6 @@ dolphin/os/OSAddress.c:
 
 dolphin/os/OSCache.c:
 	.text       start:0x81200D80 end:0x81200E00
+
+runtime/__mem.c:
+	.init       start:0x81200000 end:0x812000F4
