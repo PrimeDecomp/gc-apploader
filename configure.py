@@ -16,7 +16,6 @@ parser.add_argument('--wrapper', type=Path)
 parser.add_argument('--objdiff', type=Path)
 parser.add_argument('--binutils', type=Path)
 parser.add_argument('--sjiswrap', type=Path)
-parser.add_argument('--sdk', type=Path, help='Prime checkout extern/sdk directory')
 parser.add_argument('--map', action='store_true')
 parser.add_argument('--no-progress', dest='progress', action='store_false')
 parser.add_argument('--non-matching', action='store_true')
@@ -87,14 +86,15 @@ def Library(name, compiler, flags, objects):
 if args.part == 'loader':
     config.libs = [
         Library('Runtime', 'GC/1.2.5n', cflags_runtime, [
-            Object(NonMatching, 'runtime/memset.c'),
+            Object(NonMatching, 'runtime/__mem.c'),
         ]),
         Library('Apploader', 'GC/1.2.5n', cflags_apploader, [
             Object(NonMatching, 'apploader/Apploader.c'),
         ]),
         Library('Dolphin', 'GC/1.2.5n', cflags_base, [
-            Object(NonMatching, 'dolphin/OSSupport.c'),
-            Object(NonMatching, 'dolphin/OSCache.c'),
+            Object(NonMatching, 'dolphin/PPCArch.c'),
+            Object(NonMatching, 'dolphin/os/OSAddress.c'),
+            Object(NonMatching, 'dolphin/os/OSCache.c'),
         ]),
     ]
 else:
