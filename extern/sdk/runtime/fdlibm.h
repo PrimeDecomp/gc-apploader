@@ -12,14 +12,6 @@
 #ifndef _FDLIBM_H
 #define _FDLIBM_H
 
-#if __option(little_endian)
-#define __HI(x) (*(1 + (int*)&(x)))
-#define __LO(x) (*(int*)&(x))
-#else
-#define __HI(x) (*(int*)&(x))
-#define __LO(x) (*(1 + (int*)&(x)))
-#endif
-
-double frexp(double x, int* eptr);
+#include <math.h>
 
 #endif
