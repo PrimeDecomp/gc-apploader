@@ -147,6 +147,15 @@ dolphin/dsp/dsp_task.c:
 	.data       start:0x8131BD48 end:0x8131BE88
 	.sbss       start:0x8131C4E8 end:0x8131C500
 
+dolphin/card/CARDRdwr.c:
+	.text       start:0x813145E0 end:0x81314870
+
+dolphin/card/CARDBlock.c:
+	.text       start:0x81314870 end:0x81314BD8
+
+dolphin/card/CARDDir.c:
+	.text       start:0x81314BD8 end:0x81314E3C
+
 dolphin/os/__start.c:
 	.init       start:0x81300000 end:0x81300168
 
