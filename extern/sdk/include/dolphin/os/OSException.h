@@ -24,12 +24,14 @@ extern "C" {
 #define __OS_EXCEPTION_SYSTEM_INTERRUPT 13
 #define __OS_EXCEPTION_THERMAL_INTERRUPT 14
 #define __OS_EXCEPTION_MAX (__OS_EXCEPTION_THERMAL_INTERRUPT + 1)
+#define __OS_EXCEPTION_MEMORY_PROTECTION 15
 
 typedef u8 __OSException;
 typedef void (*__OSExceptionHandler)(__OSException exception, OSContext* context);
 
 __OSExceptionHandler __OSSetExceptionHandler(__OSException exception, __OSExceptionHandler handler);
 __OSExceptionHandler __OSGetExceptionHandler(__OSException exception);
+void __OSUnhandledException(__OSException exception, OSContext* context, u32 dsisr, u32 dar);
 
 #define OS_EXCEPTION_SAVE_GPRS(context)                                                            \
   stw r0, OS_CONTEXT_R0(context);                                                                  \
