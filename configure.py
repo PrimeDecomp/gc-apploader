@@ -127,6 +127,8 @@ if args.part == 'loader':
             Object(MatchingFor('20010522D'), 'dolphin/os/OSInterrupt.c',
                    extra_cflags=['-use_lmw_stmw on'] if args.version == '20010522D' else []),
             Object(MatchingFor('20010522D'), 'dolphin/os/OSTime.c'),
+            Object(MatchingFor('20010522D'), 'dolphin/os/OSUartExi.c',
+                   extra_cflags=['-opt peephole', '-use_lmw_stmw on'] if args.version == '20010522D' else []),
         ]),
         Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
             Object(Matching, 'runtime/__mem.c'),
