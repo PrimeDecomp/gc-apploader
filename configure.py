@@ -167,7 +167,7 @@ else:
             Object(Matching, 'dolphin/PPCArch.c', cflags=cflags_trailer),
         ]),
         DolphinLib('db', [
-            Object(NonMatching, 'dolphin/db.c'),
+            Object(Matching, 'dolphin/db.c', cflags=cflags_trailer),
         ]),
         DolphinLib('dsp', [
             Object(NonMatching, 'dolphin/dsp/dsp.c'),

@@ -47,8 +47,10 @@ BOOL OSRestoreInterrupts(BOOL level);
 u32 OSGetConsoleType(void);
 void OSRegisterVersion(const char* version);
 void* OSPhysicalToCached(u32 paddr);
+u32 OSCachedToPhysical(void* caddr);
 #if !DEBUG
 #define OSPhysicalToCached(paddr) ((void*)(0x80000000u + (u32)(paddr)))
+#define OSCachedToPhysical(caddr) ((u32)((u32)(caddr) - OS_BASE_CACHED))
 #endif
 
 #endif
