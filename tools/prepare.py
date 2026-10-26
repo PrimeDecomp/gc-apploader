@@ -2,7 +2,6 @@
 """Convert an original apploader into the reference components consumed by DTK."""
 import argparse
 import hashlib
-import json
 import os
 import shlex
 import subprocess
@@ -15,19 +14,19 @@ args = parser.parse_args()
 root = Path('config') / args.version
 if Path(args.version).name != args.version:
     parser.error('invalid version')
-settings = json.loads((root / 'version.json').read_text())
+expected_hash = (root / 'orig.sha1').read_text().split()[0]
 original = Path('orig') / args.version
 image = original / 'apploader.img'
-if hashlib.sha1(image.read_bytes()).hexdigest() != settings['sha1']:
+if hashlib.sha1(image.read_bytes()).hexdigest() != expected_hash:
     parser.error('image does not match the selected version')
 Path('build').mkdir(exist_ok=True)
 tool = Path('build/apploader' + ('.exe' if os.name == 'nt' else ''))
 subprocess.run(shlex.split(os.environ.get('CC', 'cc')) + [
     '-std=c99', '-O2', '-Wall', '-Wextra', '-Werror', 'tools/apploader.c', '-o', str(tool)
 ], check=True)
-for part in settings['parts']:
+for layout in sorted(root.glob('*.layout')):
+    part = layout.stem
     elf = original / f'{part}.elf'
-    layout = root / f'{part}.layout'
     subprocess.run([str(tool), 'to-elf', str(image), str(layout), str(elf)], check=True)
     # ALF retains explicit BSS boundaries when there is no SDK initialization table.
     subprocess.run([str(tool), 'to-alf', str(elf), str(layout), str(original / f'{part}.alf')], check=True)
