@@ -20,6 +20,7 @@ trailer/BS2Mach.c:
 
 trailer/CRC.c:
 	.text       start:0x81300920 end:0x81300BB8
+	.sbss       start:0x81318CE0 end:0x81318CE4
 
 trailer/CRCMain.c:
 	.text       start:0x81300BB8 end:0x81301C1C
