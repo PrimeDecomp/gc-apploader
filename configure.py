@@ -196,7 +196,7 @@ else:
             Object(MatchingFor('20040521'), 'dolphin/os/OSMutex.c', cflags=cflags_trailer),
             Object(MatchingFor('20040521'), 'dolphin/os/OSReboot.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSReset.c', cflags=cflags_trailer),
-            Object(NonMatching, 'dolphin/os/OSResetSW.c', cflags=cflags_trailer),
+            Object(Matching, 'dolphin/os/OSResetSW.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSRtc.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSSync.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/os/OSThread.c'),

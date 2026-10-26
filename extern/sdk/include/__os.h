@@ -11,6 +11,7 @@ void __OSShutdownDevices(BOOL doRecal);
 void __OSDoHotReset(u32 resetCode);
 void __OSStopAudioSystem(void);
 void __OSInitAudioSystem(void);
+void __OSResetSWInterruptHandler(__OSInterrupt interrupt, OSContext* context);
 void __OSUnlockAllMutex(OSThread* thread);
 void OSGetSavedRegion(void** start, void** end);
 void __OSBootDolSimple(u32 doloffset, u32 restartCode, void* regionStart, void* regionEnd,
