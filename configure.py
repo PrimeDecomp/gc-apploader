@@ -245,7 +245,7 @@ else:
             Object(NonMatching, 'dolphin/card/CARDStat.c'),
         ]),
         DolphinLib('si', [
-            Object(NonMatching, 'dolphin/si/SIBios.c'),
+            Object(Matching, 'dolphin/si/SIBios.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/si/SISamplingRate.c', cflags=cflags_trailer),
         ]),
         DolphinLib('exi', [

@@ -11,5 +11,6 @@
 #define VI_EURGB60 5
 
 u32 VIGetTvFormat(void);
+u32 VIGetCurrentLine(void);
 
 #endif
