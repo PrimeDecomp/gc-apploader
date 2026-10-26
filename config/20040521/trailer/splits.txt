@@ -79,6 +79,13 @@ dolphin/os/OSSync.c:
 dolphin/os/OSTime.c:
 	.text       start:0x81308120 end:0x813081A4
 
+dolphin/exi/EXIBios.c:
+	.text       start:0x81308238 end:0x81309C14
+	.data       start:0x8131B018 end:0x8131B128
+	.sdata      start:0x8131C1D8 end:0x8131C1DC
+	.sbss       start:0x8131C340 end:0x8131C344
+	.bss        start:0x8131D3B0 end:0x8131D470
+
 dolphin/os/__start.c:
 	.init       start:0x81300000 end:0x81300168
 
@@ -87,10 +94,3 @@ dolphin/os/__ppc_eabi_init.c:
 
 runtime/__mem.c:
 	.init       start:0x813001C0 end:0x81300304
-
-dolphin/exi/EXIBios.c:
-	.text       start:0x81308238 end:0x81309C14
-	.data       start:0x8131B018 end:0x8131B128
-	.sdata      start:0x8131C1D8 end:0x8131C1DC
-	.sbss       start:0x8131C340 end:0x8131C344
-	.bss        start:0x8131D3B0 end:0x8131D470
