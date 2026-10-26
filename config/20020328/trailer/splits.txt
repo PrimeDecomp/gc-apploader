@@ -80,6 +80,7 @@ dolphin/os/OSReset.c:
 
 dolphin/os/OSResetSW.c:
 	.text       start:0x81304C08 end:0x81304CFC
+	.sbss       start:0x81318D48 end:0x81318D60
 
 dolphin/os/OSRtc.c:
 	.text       start:0x81304CFC end:0x813054E0
