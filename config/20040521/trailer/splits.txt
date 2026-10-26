@@ -110,6 +110,16 @@ dolphin/dvd/dvderror.c:
 	.text       start:0x8130E948 end:0x8130EAE0
 	.data       start:0x8131B478 end:0x8131B4C0
 
+dolphin/dvd/dvdidutils.c:
+	.text       start:0x8130EAE0 end:0x8130EBD8
+
+dolphin/dvd/fstload.c:
+	.text       start:0x8130ED04 end:0x8130EF44
+	.data       start:0x8131B870 end:0x8131B8E0
+	.sdata      start:0x8131C210 end:0x8131C220
+	.sbss       start:0x8131C438 end:0x8131C448
+	.bss        start:0x8131D7F8 end:0x8131D868
+
 dolphin/os/__start.c:
 	.init       start:0x81300000 end:0x81300168
 

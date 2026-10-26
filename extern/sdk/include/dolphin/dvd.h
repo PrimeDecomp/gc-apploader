@@ -42,6 +42,7 @@ BOOL __DVDTestAlarm(const struct OSAlarm* alarm);
 BOOL DVDCheckDisk(void);
 s32 DVDGetCommandBlockStatus(DVDCommandBlock* block);
 BOOL DVDSetAutoInvalidation(BOOL autoInval);
+int DVDSetAutoFatalMessaging(BOOL enable);
 BOOL DVDLowWaitCoverClose(void (*callback)(u32 intType));
 BOOL DVDInquiryAsync(DVDCommandBlock* block, DVDDriveInfo* info, DVDCBCallback callback);
 BOOL DVDReadAbsAsyncForBS(DVDCommandBlock* block, void* addr, s32 length, s32 offset,

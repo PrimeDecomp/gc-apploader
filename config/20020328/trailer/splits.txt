@@ -135,14 +135,21 @@ dolphin/dvd/dvderror.c:
 	.text       start:0x8130BF70 end:0x8130C108
 	.data       start:0x813181A8 end:0x813181F0
 
+dolphin/dvd/dvdidutils.c:
+	.text       start:0x8130C108 end:0x8130C200
+
+dolphin/dvd/fstload.c:
+	.text       start:0x8130C200 end:0x8130C440
+	.data       start:0x813181F0 end:0x81318260
+	.sdata      start:0x81318C78 end:0x81318C88
+	.sbss       start:0x81318E50 end:0x81318E60
+	.bss        start:0x81319F78 end:0x81319FE8
+
 runtime/ansi_files.c:
 	.data       start:0x81318920 end:0x813189F8
 
-dolphin/dvd/dvdidutils.c:
-	.text       start:0x8130C108 end:0x8130C2D8
-
 dolphin/vi.c:
-	.text       start:0x8130C2D8 end:0x8130DD78
+	.text       start:0x8130C440 end:0x8130DD78
 
 dolphin/pad/Pad.c:
 	.text       start:0x8130DD78 end:0x8130DDDC

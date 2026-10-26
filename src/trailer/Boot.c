@@ -51,7 +51,7 @@ void main(int argc, char** argv) {
   BootResetMemory();
   OSInit();
   DVDInit();
-  DVDSetAutoInvalidation(TRUE);
+  DVDSetAutoFatalMessaging(TRUE);
   if (BootIsDebugDevice()) {
     CRCMain(0, NULL);
   }
