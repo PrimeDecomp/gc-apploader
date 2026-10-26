@@ -88,7 +88,8 @@ if args.version == '20010522D':
 elif args.version == '20040521':
     cflags_dolphin += ['-O4,p', '-inline auto', '-sym on', '-schedule off']
 cflags_trailer = [*cflags_base, '-O4,p', '-inline auto', '-sym on', '-sdata 8', '-sdata2 8']
-cflags_runtime = [*cflags_base, '-O4,p', '-inline deferred,auto', '-str reuse']
+cflags_runtime = [*cflags_base, '-i extern/sdk/runtime', '-O4,p', '-inline deferred,auto', '-str reuse',
+                  '-sdata 8', '-sdata2 8']
 
 
 def Library(name, compiler, flags, objects, src_dir='src'):
@@ -139,8 +140,10 @@ if args.part == 'loader':
             Object(MatchingFor('20010522D'), 'runtime/mbstring.c'),
             Object(MatchingFor('20010522D'), 'runtime/mem.c'),
             Object(MatchingFor('20010522D'), 'runtime/mem_funcs.c'),
-            Object(MatchingFor('20010522D'), 'runtime/string.c', extra_cflags=['-sdata 8']),
+            Object(MatchingFor('20010522D'), 'runtime/string.c'),
+            Object(MatchingFor('20010522D'), 'runtime/uart_console_io.c'),
             Object(MatchingFor('20010522D'), 'runtime/wchar_io.c'),
+            Object(MatchingFor('20010522D'), 'runtime/s_frexp.c'),
         ], src_dir='extern/sdk'),
     ]
 else:
@@ -202,8 +205,10 @@ else:
             Object(MatchingFor('20020328'), 'runtime/mbstring.c'),
             Object(MatchingFor('20020328'), 'runtime/mem.c'),
             Object(MatchingFor('20020328'), 'runtime/mem_funcs.c'),
-            Object(MatchingFor('20020328'), 'runtime/string.c', extra_cflags=['-sdata 8']),
+            Object(MatchingFor('20020328'), 'runtime/string.c'),
+            Object(MatchingFor('20020328'), 'runtime/uart_console_io.c'),
             Object(MatchingFor('20020328'), 'runtime/wchar_io.c'),
+            Object(MatchingFor('20020328'), 'runtime/s_frexp.c'),
         ], src_dir='extern/sdk'),
         DolphinLib('card', [
             Object(NonMatching, 'dolphin/card/CARDBios.c'),
