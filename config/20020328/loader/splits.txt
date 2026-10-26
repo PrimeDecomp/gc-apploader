@@ -1,0 +1,18 @@
+Sections:
+	.text       type:code align:32
+	.data       type:data align:32
+	.bss        type:bss align:32
+
+runtime/memset.c:
+	.text       start:0x81200000 end:0x81200100
+
+apploader/Apploader.c:
+	.text       start:0x81200100 end:0x81200D64
+	.data       start:0x81200E00 end:0x81201460
+	.bss        start:0x81201460 end:0x812015D4
+
+dolphin/OSSupport.c:
+	.text       start:0x81200D64 end:0x81200D80
+
+dolphin/OSCache.c:
+	.text       start:0x81200D80 end:0x81200E00
