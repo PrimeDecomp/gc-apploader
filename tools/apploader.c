@@ -299,7 +299,7 @@ static Layout loader_layout(Buffer image) {
     if (smallData2 <= smallBss || smallData2 > smallEnd || smallData2 >= size)
       fail("cannot locate loader small constants");
     add_section(&l, ".sdata", bssEnd, LOADER_ADDRESS + bssEnd, smallBss - bssEnd, 1, 3, 32);
-    add_section(&l, ".sbss", smallBss, LOADER_ADDRESS + smallBss, smallData2 - smallBss, 8, 3, 32);
+    add_section(&l, ".sbss", smallBss, LOADER_ADDRESS + smallBss, referencedEnd - smallBss, 8, 3, 32);
     add_section(&l, ".sdata2", smallData2, LOADER_ADDRESS + smallData2, size - smallData2, 1, 2, 8);
   }
   return l;

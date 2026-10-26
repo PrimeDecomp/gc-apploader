@@ -123,7 +123,7 @@ class ConverterTests(unittest.TestCase):
         self.round_trip(image(trailer_data=trailer(False)))
 
     def test_small_constants_keep_leading_zero(self):
-        for last_access in [0x806d802c, 0xc86d8028]:
+        for last_access, bss_size in [(0x806d802c, 0x10), (0xc86d8028, 0x10), (0x806d8028, 0x0c)]:
             with self.subTest(last_access=hex(last_access)):
                 body = loader()
                 body.extend(bytes(0x40))
@@ -134,7 +134,7 @@ class ConverterTests(unittest.TestCase):
                 original[20:24] = words(len(body))
                 _, elf, _, _ = self.round_trip(original)
                 entries = sections(elf.read_bytes())
-                self.assertEqual(entries['.sbss'][3:6:2], (0x81200100, 0x10))
+                self.assertEqual(entries['.sbss'][3:6:2], (0x81200100, bss_size))
                 self.assertEqual(entries['.sdata2'][3:6:2], (0x81200110, 0x10))
 
     def test_dol_trailer_round_trip(self):
