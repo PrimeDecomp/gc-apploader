@@ -186,7 +186,7 @@ else:
             Object(NonMatching, 'dolphin/os/OS.c'),
             Object(NonMatching, 'dolphin/os/OSAlarm.c'),
             Object(Matching, 'dolphin/os/OSArena.c', cflags=cflags_trailer),
-            Object(NonMatching, 'dolphin/os/OSAudioSystem.c'),
+            Object(Matching, 'dolphin/os/OSAudioSystem.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSCache.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/os/OSContext.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/os/OSError.c'),
