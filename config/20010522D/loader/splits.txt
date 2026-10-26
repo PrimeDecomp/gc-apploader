@@ -46,6 +46,9 @@ dolphin/os/OSInterrupt.c:
 	.sdata      start:0x81206088 end:0x812060F8
 	.sbss       start:0x81206128 end:0x8120612C
 
+runtime/ansi_files.c:
+	.data       start:0x81205B88 end:0x81205C60
+
 dolphin/os/OSTime.c:
 	.text       start:0x81201E10 end:0x81201E28
 
