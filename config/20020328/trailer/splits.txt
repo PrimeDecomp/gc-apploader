@@ -147,28 +147,32 @@ dolphin/dvd/fstload.c:
 	.sbss       start:0x81318E50 end:0x81318E60
 	.bss        start:0x81319F78 end:0x81319FE8
 
-runtime/ansi_files.c:
-	.data       start:0x81318920 end:0x813189F8
-
 dolphin/vi.c:
 	.text       start:0x8130C440 end:0x8130DD78
 
 dolphin/pad/Pad.c:
 	.text       start:0x8130DD78 end:0x8130DDDC
 	.sdata      start:0x81318C88 end:0x81318C8C
-	.sbss       start:0x81318EB8 end:0x81318EBC
+	.sbss       start:0x81318EB8 end:0x81318EC0
 
 dolphin/dsp/dsp.c:
-	.text       start:0x8130DDDC end:0x8130DFA0
+	.text       start:0x8130DDDC end:0x8130DF50
+	.data       start:0x813185A0 end:0x813185D8
+	.sbss       start:0x81318EC0 end:0x81318EC4
+
+dolphin/dsp/dsp_debug.c:
+	.text       start:0x8130DF50 end:0x8130DFA0
 
 dolphin/dsp/dsp_task.c:
 	.text       start:0x8130DFA0 end:0x8130E824
+	.data       start:0x813185D8 end:0x81318718
+	.sbss       start:0x81318EC8 end:0x81318EE0
 
-dolphin/dsp/dsp_debug.c:
-	.text       start:0x8130E824 end:0x8130E828
+runtime/ansi_files.c:
+	.data       start:0x81318920 end:0x813189F8
 
 dolphin/card/CARDBios.c:
-	.text       start:0x8130E828 end:0x8130FB44
+	.text       start:0x8130E824 end:0x8130FB44
 
 dolphin/card/CARDUnlock.c:
 	.text       start:0x8130FB44 end:0x81310DA4

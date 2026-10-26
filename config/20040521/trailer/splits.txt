@@ -133,6 +133,20 @@ dolphin/dvd/fstload.c:
 	.sbss       start:0x8131C438 end:0x8131C448
 	.bss        start:0x8131D7F8 end:0x8131D868
 
+dolphin/dsp/dsp.c:
+	.text       start:0x813113B4 end:0x81311534
+	.data       start:0x8131BCC8 end:0x8131BD48
+	.sdata      start:0x8131C230 end:0x8131C234
+	.sbss       start:0x8131C4E0 end:0x8131C4E4
+
+dolphin/dsp/dsp_debug.c:
+	.text       start:0x81311534 end:0x81311584
+
+dolphin/dsp/dsp_task.c:
+	.text       start:0x81311584 end:0x81311E08
+	.data       start:0x8131BD48 end:0x8131BE88
+	.sbss       start:0x8131C4E8 end:0x8131C500
+
 dolphin/os/__start.c:
 	.init       start:0x81300000 end:0x81300168
 
