@@ -26,9 +26,6 @@ trailer/CRCMain.c:
 	.text       start:0x81300BB8 end:0x81301C1C
 	.data       start:0x813173D0 end:0x81317508
 
-runtime/ansi_files.c:
-	.data       start:0x81318920 end:0x813189F8
-
 dolphin/PPCArch.c:
 	.text       start:0x81301C1C end:0x81301CA8
 
@@ -48,6 +45,10 @@ dolphin/os/OSAudioSystem.c:
 
 dolphin/os/OSCache.c:
 	.text       start:0x81302F4C end:0x81303370
+	.data       start:0x81317748 end:0x81317978
+
+runtime/ansi_files.c:
+	.data       start:0x81318920 end:0x813189F8
 
 dolphin/os/OSContext.c:
 	.text       start:0x81303370 end:0x81303B1C
