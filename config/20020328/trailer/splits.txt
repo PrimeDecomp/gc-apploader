@@ -37,6 +37,7 @@ dolphin/os/OS.c:
 
 dolphin/os/OSAlarm.c:
 	.text       start:0x813025C4 end:0x81302C6C
+	.sbss       start:0x81318D18 end:0x81318D20
 
 dolphin/os/OSArena.c:
 	.text       start:0x81302C6C end:0x81302CB8
