@@ -87,7 +87,8 @@ if args.version == '20010522D':
                        '-sdata 8', '-sdata2 8']
 elif args.version == '20040521':
     cflags_dolphin += ['-O4,p', '-inline auto', '-sym on', '-schedule off']
-cflags_trailer = [*cflags_base, '-O4,p', '-inline auto', '-sym on', '-sdata 8', '-sdata2 8']
+cflags_trailer = [*cflags_base, '-DSDK_VERSION=' + apploader_version, '-O4,p', '-inline auto',
+                  '-sym on', '-sdata 8', '-sdata2 8']
 cflags_runtime = [*cflags_base, '-i extern/sdk/runtime', '-O4,p', '-inline deferred,auto', '-str reuse',
                   '-sdata 8', '-sdata2 8']
 
@@ -183,7 +184,7 @@ else:
             Object(NonMatching, 'dolphin/os/OSAlarm.c'),
             Object(Matching, 'dolphin/os/OSArena.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/os/OSAudioSystem.c'),
-            Object(NonMatching, 'dolphin/os/OSCache.c'),
+            Object(Matching, 'dolphin/os/OSCache.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/os/OSContext.c'),
             Object(NonMatching, 'dolphin/os/OSError.c'),
             Object(NonMatching, 'dolphin/os/OSInterrupt.c'),
