@@ -5,3 +5,4 @@ splits: config/20040521/loader/splits.txt
 mw_comment_version: 8
 write_asm: true
 quick_analysis: true
+fill_gaps: false
