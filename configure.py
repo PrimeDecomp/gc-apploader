@@ -172,7 +172,7 @@ else:
         DolphinLib('dsp', [
             Object(Matching, 'dolphin/dsp/dsp.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/dsp/dsp_debug.c', cflags=cflags_trailer),
-            Object(NonMatching, 'dolphin/dsp/dsp_task.c', cflags=cflags_trailer),
+            Object(Matching, 'dolphin/dsp/dsp_task.c', cflags=cflags_trailer),
         ]),
         DolphinLib('dvd', [
             Object(NonMatching, 'dolphin/dvd/dvdlow.c'),
