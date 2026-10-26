@@ -1,3 +1,8 @@
-#include "dolphin/types.h"
+#include "dolphin/os.h"
 
-void* OSPhysicalToCached(u32 address) { return (void*)(address + 0x80000000); }
+#undef OSPhysicalToCached
+
+void* OSPhysicalToCached(u32 paddr) {
+  ASSERTMSGLINE(0x2C, paddr < 0x10000000U, "OSPhysicalToCached(): illegal address.");
+  return (void*)(paddr + 0x80000000);
+}

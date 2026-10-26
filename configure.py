@@ -81,6 +81,12 @@ if args.version == '20010522':
         *cflags_base, '-DAPPLOADER_VERSION=' + apploader_version, '-O4,p', '-inline auto',
         '-sym on', '-use_lmw_stmw on', '-pool on', '-str reuse',
     ]
+cflags_dolphin = [*cflags_base, '-DSDK_VERSION=' + apploader_version]
+if args.version == '20010522D':
+    cflags_dolphin += ['-DDEBUG=1', '-O0', '-inline off', '-schedule off', '-sym on',
+                       '-sdata 8', '-sdata2 8']
+elif args.version == '20040521':
+    cflags_dolphin += ['-O4,p', '-inline auto', '-sym on', '-schedule off']
 cflags_runtime = [*cflags_base, '-O4,p', '-inline deferred,auto', '-str reuse']
 
 
@@ -95,7 +101,7 @@ def Library(name, compiler, flags, objects, src_dir='src'):
 
 
 def DolphinLib(name, objects):
-    return Library(name, 'GC/1.2.5n', cflags_base, objects, src_dir='extern/sdk')
+    return Library(name, 'GC/1.2.5n', cflags_dolphin, objects, src_dir='extern/sdk')
 
 
 if args.part == 'loader':
@@ -107,11 +113,12 @@ if args.part == 'loader':
             Object(Matching, 'dolphin/PPCArch.c'),
         ]),
         DolphinLib('os', [
-            Object(NonMatching, 'dolphin/os/OS.c'),
-            Object(MatchingFor('20020328'), 'dolphin/os/OSAddress.c'),
-            Object(MatchingFor('20020328', '20010522', '20010522D'), 'dolphin/os/OSCache.c'),
+            Object(MatchingFor('20010522D'), 'dolphin/os/OS.c'),
+            Object(MatchingFor('20020328', '20010522D', '20040521'), 'dolphin/os/OSAddress.c',
+                   extra_cflags=['-opt peephole'] if args.version == '20010522D' else []),
+            Object(Matching, 'dolphin/os/OSCache.c'),
             Object(NonMatching, 'dolphin/os/OSError.c'),
-            Object(NonMatching, 'dolphin/os/OSExec.c'),
+            Object(MatchingFor('20040521'), 'dolphin/os/OSExec.c'),
             Object(NonMatching, 'dolphin/os/OSInterrupt.c'),
             Object(NonMatching, 'dolphin/os/OSTime.c'),
         ]),
