@@ -160,7 +160,7 @@ else:
         Library('Trailer', 'GC/1.2.5n', cflags_reboot, [
             Object(MatchingFor('20040521'), 'trailer/Boot.c'),
             Object(MatchingFor('20020328'), 'trailer/BS2Mach.c'),
-            Object(MatchingFor('20020328'), 'trailer/CRC.c'),
+            Object(Matching, 'trailer/CRC.c'),
             Object(NonMatching, 'trailer/CRCMain.c'),
         ]),
         DolphinLib('base', [
