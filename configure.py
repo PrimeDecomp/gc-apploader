@@ -87,6 +87,7 @@ if args.version == '20010522D':
                        '-sdata 8', '-sdata2 8']
 elif args.version == '20040521':
     cflags_dolphin += ['-O4,p', '-inline auto', '-sym on', '-schedule off']
+cflags_trailer = [*cflags_base, '-O4,p', '-inline auto', '-sym on', '-sdata 8', '-sdata2 8']
 cflags_runtime = [*cflags_base, '-O4,p', '-inline deferred,auto', '-str reuse']
 
 
@@ -132,7 +133,7 @@ else:
         Library('Trailer', 'GC/1.2.5n', cflags_apploader, [
             Object(NonMatching, 'trailer/Boot.c'),
             Object(NonMatching, 'trailer/BS2Mach.c'),
-            Object(NonMatching, 'trailer/CRC.c'),
+            Object(MatchingFor('20020328'), 'trailer/CRC.c', cflags=cflags_trailer),
             Object(NonMatching, 'trailer/CRCMain.c'),
         ]),
         DolphinLib('base', [

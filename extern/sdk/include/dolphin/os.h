@@ -20,6 +20,7 @@ typedef struct OSBootInfo_s {
 #define OS_CONSOLE_ARTHUR 0x10000002
 
 u32 OSGetConsoleType(void);
+void* OSAllocFromArenaLo(u32 size, u32 align);
 void* OSPhysicalToCached(u32 paddr);
 #if !DEBUG
 #define OSPhysicalToCached(paddr) ((void*)(0x80000000u + (u32)(paddr)))
