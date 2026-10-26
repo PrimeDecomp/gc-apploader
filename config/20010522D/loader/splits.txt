@@ -59,5 +59,14 @@ runtime/__va_arg.c:
 runtime/runtime.c:
 	.text       start:0x81202190 end:0x81202498
 
+runtime/mem.c:
+	.text       start:0x81202C64 end:0x81202D6C
+
+runtime/mem_funcs.c:
+	.text       start:0x81202D6C end:0x81203048
+
+runtime/string.c:
+	.text       start:0x81204898 end:0x8120499C
+
 runtime/__mem.c:
 	.init       start:0x81200000 end:0x81200144

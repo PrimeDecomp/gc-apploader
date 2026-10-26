@@ -190,7 +190,6 @@ else:
             Object(NonMatching, 'runtime/global_destructor_chain.c'),
             Object(NonMatching, 'runtime/CPlusLibPPC.c'),
             Object(MatchingFor('20020328'), 'runtime/runtime.c'),
-            Object(NonMatching, 'runtime/MSL.c'),
         ], src_dir='extern/sdk'),
         DolphinLib('card', [
             Object(NonMatching, 'dolphin/card/CARDBios.c'),

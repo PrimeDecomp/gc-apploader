@@ -171,8 +171,14 @@ runtime/CPlusLibPPC.c:
 runtime/runtime.c:
 	.text       start:0x8131432C end:0x813146A4
 
-runtime/MSL.c:
-	.text       start:0x813146A4 end:0x8131706C
+runtime/mem.c:
+	.text       start:0x81314FC4 end:0x813150CC
+
+runtime/mem_funcs.c:
+	.text       start:0x813150CC end:0x813153A8
+
+runtime/string.c:
+	.text       start:0x81316BF8 end:0x81316D80
 
 runtime/__mem.c:
 	.init       start:0x8130015C end:0x813002A0
