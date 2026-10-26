@@ -71,9 +71,16 @@ cflags_base = [
     '-lang c', '-Cpp_exceptions off', '-sdata 0', '-sdata2 0',
     '-i include', '-i extern/sdk/include', '-i extern/sdk/libc',
 ]
+apploader_version = args.version.rstrip('D')
 cflags_apploader = [
-    *cflags_base, '-O0', '-sym on', '-opt peephole', '-use_lmw_stmw on', '-pool on', '-str reuse',
+    *cflags_base, '-DAPPLOADER_VERSION=' + apploader_version, '-DDEBUG=1', '-O0', '-sym on',
+    '-opt peephole', '-use_lmw_stmw on', '-pool on', '-str reuse',
 ]
+if args.version == '20010522':
+    cflags_apploader = [
+        *cflags_base, '-DAPPLOADER_VERSION=' + apploader_version, '-O4,p', '-inline auto',
+        '-sym on', '-use_lmw_stmw on', '-pool on', '-str reuse',
+    ]
 cflags_runtime = [*cflags_base, '-O4,p', '-inline deferred,auto', '-str reuse']
 
 
@@ -94,22 +101,22 @@ def DolphinLib(name, objects):
 if args.part == 'loader':
     config.libs = [
         Library('Apploader', 'GC/1.2.5n', cflags_apploader, [
-            Object(MatchingFor('20020328'), 'apploader/Apploader.c'),
+            Object(MatchingFor('20020328', '20010522D'), 'apploader/Apploader.c'),
         ]),
         DolphinLib('base', [
-            Object(MatchingFor('20020328'), 'dolphin/PPCArch.c'),
+            Object(Matching, 'dolphin/PPCArch.c'),
         ]),
         DolphinLib('os', [
             Object(NonMatching, 'dolphin/os/OS.c'),
             Object(MatchingFor('20020328'), 'dolphin/os/OSAddress.c'),
-            Object(MatchingFor('20020328'), 'dolphin/os/OSCache.c'),
+            Object(MatchingFor('20020328', '20010522', '20010522D'), 'dolphin/os/OSCache.c'),
             Object(NonMatching, 'dolphin/os/OSError.c'),
             Object(NonMatching, 'dolphin/os/OSExec.c'),
             Object(NonMatching, 'dolphin/os/OSInterrupt.c'),
             Object(NonMatching, 'dolphin/os/OSTime.c'),
         ]),
         Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
-            Object(MatchingFor('20020328'), 'runtime/__mem.c'),
+            Object(Matching, 'runtime/__mem.c'),
         ], src_dir='extern/sdk'),
     ]
 else:

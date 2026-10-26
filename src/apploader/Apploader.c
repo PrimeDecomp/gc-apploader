@@ -28,11 +28,13 @@ typedef enum {
   kLoad_ReadRemainder = 12
 } ELoadState;
 
+#if APPLOADER_VERSION >= 20020328
 static BOOL SecondTimeForThePart;
 static void* SavedAddress;
 static u32 SavedLength;
 static u32 SavedOffset;
 static ELoadState SavedState;
+#endif
 static BootBlock2 DiscLayout ATTRIBUTE_ALIGN(32);
 static DolHeader Executable ATTRIBUTE_ALIGN(32);
 static u32 NextSection;
@@ -42,6 +44,7 @@ static ApploaderReport Report;
 static u32 DiscBootInfo[4] ATTRIBUTE_ALIGN(32);
 static BOOL LoadFstLast;
 
+#if APPLOADER_VERSION >= 20020328
 static void ApploaderLimitRead(void** address, u32* length, u32* offset, ELoadState* state) {
   if (SecondTimeForThePart) {
     SecondTimeForThePart = FALSE;
@@ -75,6 +78,8 @@ u32 OSGetConsoleType(void) {
   return bootInfo->consoleType;
 }
 
+#endif
+
 void ApploaderEntry(ApploaderInitCallback* init, ApploaderMainCallback* main,
                     ApploaderFinalCallback* final) {
   *init = ApploaderInit;
@@ -89,8 +94,10 @@ void ApploaderInit(ApploaderReport report) {
   LoadState = kLoad_BootBlock;
   ReadStatus = 0;
   Report = report;
+#if APPLOADER_VERSION >= 20020328
   Report("Apploader Initialized.  $Revision: 29 $.\n");
   Report("This Apploader built %s %s\n", "Mar 28 2002", "02:34:54");
+#endif
 }
 
 static u32 ApploaderGetDolSize(void) {
@@ -109,6 +116,7 @@ static u32 ApploaderGetDolSize(void) {
   return size;
 }
 
+#if APPLOADER_VERSION >= 20020328
 static BOOL ApploaderCheckDolBounds(u32 limit) {
   u32 end;
   int i;
@@ -142,6 +150,8 @@ static BOOL ApploaderCheckDolBounds(u32 limit) {
   return TRUE;
 }
 
+#endif
+
 static void ApploaderPrepareDisc(void) {}
 
 static void ApploaderSetBootInfo(BootInfo* bootInfo) {
@@ -156,7 +166,9 @@ static void ApploaderSetBootInfo(BootInfo* bootInfo) {
 BOOL ApploaderMain(void** address, u32* length, u32* offset) {
   BootInfo* bootInfo = OSPhysicalToCached(0);
   u32 limit;
+#if APPLOADER_VERSION >= 20020328
   u32 response[2];
+#endif
 
   switch (LoadState) {
   case kLoad_BootBlock:
@@ -207,6 +219,16 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
       }
       DiscLayout.fstAddress =
           (void*)ROUND_DOWN_32(SIMULATED_MEMORY_SIZE + 0x80000000 - DiscLayout.fstMaxLength);
+#if APPLOADER_VERSION < 20020328
+    } else if (SIMULATED_MEMORY_SIZE == bootInfo->memorySize) {
+      DiscLayout.fstAddress = (void*)ROUND_DOWN_32(DEBUG_MONITOR_ADDRESS - DiscLayout.fstMaxLength);
+    } else {
+      Report("APPLOADER ERROR >>> Physical memory size is 0x%x bytes.\n"
+             "APPLOADER ERROR >>> Console simulated memory size must be smaller than or equal "
+             "to the Physical memory size\n",
+             bootInfo->memorySize, SIMULATED_MEMORY_SIZE);
+      PPCHalt();
+#else
     } else {
       if (SIMULATED_MEMORY_SIZE > bootInfo->memorySize) {
         Report("APPLOADER WARNING >>> Physical memory size is 0x%x bytes.\n"
@@ -218,6 +240,7 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
         SIMULATED_MEMORY_SIZE = bootInfo->memorySize;
       }
       DiscLayout.fstAddress = (void*)ROUND_DOWN_32(DEBUG_MONITOR_ADDRESS - DiscLayout.fstMaxLength);
+#endif
     }
     BOOT_INFO_2 = (u8*)DiscLayout.fstAddress - 0x2000;
     *address = BOOT_INFO_2;
@@ -241,7 +264,9 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
       PPCHalt();
     }
     DCInvalidateRange(*address, *length);
+#if APPLOADER_VERSION >= 20020328
     ApploaderLimitRead(address, length, offset, &LoadState);
+#endif
     break;
   case kLoad_DolHeader:
   loadDolHeader:
@@ -265,6 +290,13 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
     } else {
       LOADED_IMAGE_SIZE = size;
     }
+#if APPLOADER_VERSION < 20020328
+    if (Executable.bssAddress + Executable.bssSize > 0x81200000) {
+      Report("APPLOADER ERROR >>> Too big BSS segment! (0x%x - 0x%x)\n", Executable.bssAddress,
+             Executable.bssAddress + Executable.bssSize);
+      PPCHalt();
+    }
+#else
     if (!(OSGetConsoleType() & 0x10000000)) {
       if (!ApploaderCheckDolBounds(0x80700000)) {
         Report("APPLOADER ERROR >>> One of the sections in the dol file exceeded its boundary. All "
@@ -285,6 +317,7 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
         PPCHalt();
       }
     }
+#endif
     memset((void*)Executable.bssAddress, 0, Executable.bssSize);
     DCFlushRange((void*)Executable.bssAddress, Executable.bssSize);
     LoadState = kLoad_Text;
@@ -343,7 +376,9 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
         PPCHalt();
       }
       DCInvalidateRange(*address, *length);
+#if APPLOADER_VERSION >= 20020328
       ApploaderLimitRead(address, length, offset, &LoadState);
+#endif
       break;
     }
     LoadState = kLoad_BootInfo;
@@ -353,9 +388,12 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
     LoadState = kLoad_Done;
     /* fallthrough */
   case kLoad_Done:
+#if APPLOADER_VERSION >= 20020328
     ApploaderReadController(3, response);
     PAD_3_BUTTON = ((u16*)response)[0];
+#endif
     return FALSE;
+#if APPLOADER_VERSION >= 20020328
   case kLoad_ReadRemainder:
     if (SecondTimeForThePart != TRUE) {
       Report("Failed assertion SecondTimeForThePart == TRUE");
@@ -363,6 +401,7 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
     }
     ApploaderLimitRead(address, length, offset, &LoadState);
     break;
+#endif
   default:
     return FALSE;
   }

@@ -1,6 +1,7 @@
 #ifndef _APPLOADER
 #define _APPLOADER
 
+#include "dolphin/os.h"
 #include "dolphin/types.h"
 #include "string.h"
 
@@ -43,7 +44,6 @@ typedef struct {
   u32 fstMaxLength;
 } BootInfo;
 
-void* OSPhysicalToCached(u32 address);
 u32 OSGetConsoleType(void);
 void PPCHalt(void);
 void DCInvalidateRange(void* address, u32 length);
