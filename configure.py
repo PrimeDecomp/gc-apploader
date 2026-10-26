@@ -134,6 +134,9 @@ if args.part == 'loader':
             Object(Matching, 'runtime/__mem.c'),
             Object(MatchingFor('20010522D'), 'runtime/__va_arg.c'),
             Object(MatchingFor('20010522D'), 'runtime/runtime.c'),
+            Object(MatchingFor('20010522D'), 'runtime/mem.c'),
+            Object(MatchingFor('20010522D'), 'runtime/mem_funcs.c'),
+            Object(MatchingFor('20010522D'), 'runtime/string.c', extra_cflags=['-sdata 8']),
         ], src_dir='extern/sdk'),
     ]
 else:
@@ -190,6 +193,9 @@ else:
             Object(NonMatching, 'runtime/global_destructor_chain.c'),
             Object(NonMatching, 'runtime/CPlusLibPPC.c'),
             Object(MatchingFor('20020328'), 'runtime/runtime.c'),
+            Object(MatchingFor('20020328'), 'runtime/mem.c'),
+            Object(MatchingFor('20020328'), 'runtime/mem_funcs.c'),
+            Object(MatchingFor('20020328'), 'runtime/string.c', extra_cflags=['-sdata 8']),
         ], src_dir='extern/sdk'),
         DolphinLib('card', [
             Object(NonMatching, 'dolphin/card/CARDBios.c'),
