@@ -120,6 +120,8 @@ dolphin/si/SISamplingRate.c:
 
 dolphin/db.c:
 	.text       start:0x81308944 end:0x81308A30
+	.data       start:0x81318018 end:0x81318030
+	.sbss       start:0x81318D98 end:0x81318DA0
 
 dolphin/dvd/dvdlow.c:
 	.text       start:0x81308A30 end:0x813098A8

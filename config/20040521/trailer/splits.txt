@@ -102,6 +102,11 @@ dolphin/si/SISamplingRate.c:
 	.data       start:0x8131B240 end:0x8131B2D8
 	.sbss       start:0x8131C368 end:0x8131C36C
 
+dolphin/db.c:
+	.text       start:0x8130B0F8 end:0x8130B1E4
+	.data       start:0x8131B2D8 end:0x8131B2F0
+	.sbss       start:0x8131C370 end:0x8131C378
+
 dolphin/dvd/dvdqueue.c:
 	.text       start:0x8130E750 end:0x8130E948
 	.bss        start:0x8131D7D8 end:0x8131D7F8
