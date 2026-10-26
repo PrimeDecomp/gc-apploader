@@ -155,7 +155,7 @@ if args.part == 'loader':
 else:
     config.libs = [
         Library('Trailer', 'GC/1.2.5n', cflags_apploader, [
-            Object(NonMatching, 'trailer/Boot.c'),
+            Object(NonMatching, 'trailer/Boot.c', cflags=cflags_trailer),
             Object(MatchingFor('20020328'), 'trailer/BS2Mach.c', cflags=cflags_trailer,
                    extra_cflags=['-inline off']),
             Object(MatchingFor('20020328'), 'trailer/CRC.c', cflags=cflags_trailer),

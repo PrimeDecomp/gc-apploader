@@ -33,6 +33,7 @@ u32 __OSBusClock AT_ADDRESS(0x800000F8);
 
 #define OS_CONSOLE_ARTHUR 0x10000002
 
+void OSInit(void);
 BOOL OSDisableInterrupts(void);
 BOOL OSEnableInterrupts(void);
 BOOL OSRestoreInterrupts(BOOL level);
