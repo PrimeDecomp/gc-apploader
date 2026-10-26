@@ -49,6 +49,10 @@ dolphin/os/OSInterrupt.c:
 dolphin/os/OSTime.c:
 	.text       start:0x81201E10 end:0x81201E28
 
+dolphin/os/OSUartExi.c:
+	.text       start:0x81201E28 end:0x8120209C
+	.sbss       start:0x81206130 end:0x81206134
+
 runtime/__va_arg.c:
 	.text       start:0x8120209C end:0x81202190
 
