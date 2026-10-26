@@ -33,6 +33,7 @@ u32 __OSBusClock AT_ADDRESS(0x800000F8);
 volatile u16 __OSDeviceCode AT_ADDRESS(0x800030E6);
 #define OS_BUS_CLOCK __OSBusClock
 #define OS_TIMER_CLOCK (OS_BUS_CLOCK / 4)
+#define OSTicksToSeconds(ticks) ((ticks) / OS_TIMER_CLOCK)
 #define OSTicksToMilliseconds(ticks) ((ticks) / (OS_TIMER_CLOCK / 1000))
 #define OSMillisecondsToTicks(msec) ((msec) * (OS_TIMER_CLOCK / 1000))
 #define OSMicrosecondsToTicks(usec) (((usec) * (OS_TIMER_CLOCK / 125000)) / 8)
