@@ -22,6 +22,10 @@ dolphin/os/OSCache.c:
 	.text       start:0x81302910 end:0x81302D48
 	.data       start:0x81319D90 end:0x81319FC0
 
+dolphin/os/OSContext.c:
+	.text       start:0x81302D48 end:0x8130352C
+	.data       start:0x81319FC0 end:0x8131A198
+
 dolphin/os/OSLink.c:
 	.text       start:0x81306278 end:0x81306290
 

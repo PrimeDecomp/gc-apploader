@@ -47,11 +47,12 @@ dolphin/os/OSCache.c:
 	.text       start:0x81302F4C end:0x81303370
 	.data       start:0x81317748 end:0x81317978
 
-runtime/ansi_files.c:
-	.data       start:0x81318920 end:0x813189F8
-
 dolphin/os/OSContext.c:
 	.text       start:0x81303370 end:0x81303B1C
+	.data       start:0x81317978 end:0x81317B50
+
+runtime/ansi_files.c:
+	.data       start:0x81318920 end:0x813189F8
 
 dolphin/os/OSError.c:
 	.text       start:0x81303B1C end:0x81303F3C
