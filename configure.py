@@ -158,7 +158,7 @@ if args.part == 'loader':
 else:
     config.libs = [
         Library('Trailer', 'GC/1.2.5n', cflags_reboot, [
-            Object(MatchingFor('20040521'), 'trailer/Boot.c'),
+            Object(MatchingFor('20020328', '20040521'), 'trailer/Boot.c'),
             Object(MatchingFor('20020328'), 'trailer/BS2Mach.c', extra_cflags=['-DDEBUG=1', '-opt nodeadstore']),
             Object(Matching, 'trailer/CRC.c'),
             Object(NonMatching, 'trailer/CRCMain.c'),

@@ -9,10 +9,10 @@
 #include <string.h>
 
 #if SDK_VERSION < 20040521
-u32 ResetCode;
+u32 ResetCode = 0;
 u32 RebootCode AT_ADDRESS(0x817ffffc);
 u32 RebootArgument AT_ADDRESS(0x817ffff8);
-u32 RebootParameter;
+u32 RebootParameter = 0;
 static double FpuZero;
 
 #endif
@@ -93,11 +93,9 @@ void main(void) {
     case BS2_STATE_READY:
       BS2Run();
       break;
-    case BS2_STATE_COVER_CLOSED:
+    case BS2_STATE_NO_DISK:
       break;
-    case 13:
-      break;
-    case 14:
+    case BS2_STATE_COVER_OPEN:
       break;
     case BS2_STATE_MOTOR_STOPPED:
       break;
@@ -149,7 +147,7 @@ static asm void BootClearFPRs(void) {
 #endif
 
 static void BootResetMemory(void) {
-  OSBootInfo* bootInfo = &__OSBootInfo;
+  OSBootInfo* bootInfo = OSPhysicalToCached(0);
   bootInfo->arenaHi = 0;
   bootInfo->arenaLo = 0;
   memset(__OSDebuggerWork, 0, sizeof(__OSDebuggerWork));
