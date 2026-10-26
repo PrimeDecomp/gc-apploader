@@ -167,12 +167,11 @@ runtime/__va_arg.c:
 runtime/global_destructor_chain.c:
 	.text       start:0x81314288 end:0x813142D0
 	.dtors      start:0x813170A0 end:0x813170A4
-
-runtime/CPlusLibPPC.c:
-	.text       start:0x813142D0 end:0x8131432C
+	.sbss       start:0x81318EE0 end:0x81318EE4
 
 runtime/runtime.c:
-	.text       start:0x8131432C end:0x813146A4
+	.text       start:0x813142D0 end:0x813146A4
+	.rodata     start:0x813170C0 end:0x813170D8
 
 runtime/ansi_fp.c:
 	.text       start:0x813147B0 end:0x81314B64
