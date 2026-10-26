@@ -178,10 +178,10 @@ runtime/direct_io.c:
 	.text       start:0x81314C68 end:0x81314F44
 
 runtime/mbstring.c:
-	.text       start:0x81314F44 end:0x81314FC4
+	.text       start:0x81314F44 end:0x81314F80
 
 runtime/mem.c:
-	.text       start:0x81314FC4 end:0x813150CC
+	.text       start:0x81314F80 end:0x813150CC
 
 runtime/mem_funcs.c:
 	.text       start:0x813150CC end:0x813153A8
