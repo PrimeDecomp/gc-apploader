@@ -3,6 +3,8 @@
 #include "dolphin/base/PPCArch.h"
 #include "dolphin/hw_regs.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/os/OSExec.h"
+#include "dolphin/pad.h"
 
 #define ENQUEUE_INFO(info, queue)                                                                  \
   do {                                                                                             \
@@ -45,6 +47,31 @@ static OSResetFunctionQueue ResetFunctionQueue;
 void OSRegisterResetFunction(OSResetFunctionInfo* info) {
   ENQUEUE_INFO_PRIO(info, &ResetFunctionQueue);
 }
+
+#if SDK_VERSION >= 20040521
+int __OSCallResetFunctions(BOOL final) {
+  OSResetFunctionInfo* info;
+  int err;
+  u32 priority;
+
+  priority = 0;
+  err = 0;
+
+  for (info = ResetFunctionQueue.head; info != 0;) {
+    if (err != 0 && priority != info->priority)
+      break;
+    err |= !info->func(final);
+    priority = info->priority;
+    info = info->next;
+  }
+
+  err |= !__OSSyncSram();
+  if (err) {
+    return 0;
+  }
+  return 1;
+}
+#endif
 
 /* clang-format off */
 static asm void Reset(u32 resetCode) {
@@ -89,6 +116,25 @@ L_00000208:
 }
 /* clang-format on */
 
+#if SDK_VERSION >= 20040521
+static void KillThreads(void) {
+  OSThread* thread;
+  OSThread* next;
+
+  for (thread = __OSActiveThreadQueue.head; thread; thread = next) {
+    next = thread->linkActive.next;
+    switch (thread->state) {
+    case 1:
+    case 4:
+      OSCancelThread(thread);
+      continue;
+    default:
+      continue;
+    }
+  }
+}
+#endif
+
 void __OSDoHotReset(u32 resetCode) {
   OSDisableInterrupts();
   __VIRegs[1] = 0;
@@ -96,9 +142,48 @@ void __OSDoHotReset(u32 resetCode) {
   Reset(resetCode * 8);
 }
 
+#if SDK_VERSION >= 20040521
+void __OSShutdownDevices(BOOL doRecal) {
+  int rc;
+  BOOL disableRecalibration;
+
+  __OSStopAudioSystem();
+
+  if (!doRecal) {
+    disableRecalibration = __PADDisableRecalibration(TRUE);
+  }
+
+  do {
+  } while (!__OSCallResetFunctions(FALSE));
+  do {
+  } while (!__OSSyncSram());
+
+  OSDisableInterrupts();
+
+  rc = __OSCallResetFunctions(TRUE);
+
+  LCDisable();
+  if (!doRecal) {
+    __PADDisableRecalibration(disableRecalibration);
+  }
+
+  KillThreads();
+}
+u32 OSGetResetCode(void) {
+  u32 resetCode;
+  if (__OSRebootParams.valid)
+    resetCode = 0x80000000 | __OSRebootParams.restartCode;
+  else
+    resetCode = (__PIRegs[9] & 0xFFFFFFF8) / 8;
+
+  return resetCode;
+}
+
+#else
 u32 OSGetResetCode(void) {
   if (*(volatile u8*)OSPhysicalToCached(0x30e2) != 0) {
     return OS_RESETCODE_RESTART;
   }
   return (__PIRegs[9] & 0xfffffff8) / 8;
 }
+#endif

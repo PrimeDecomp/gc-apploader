@@ -4,5 +4,6 @@
 #include "dolphin/types.h"
 
 BOOL PADSync(void);
+BOOL __PADDisableRecalibration(BOOL disable);
 
 #endif

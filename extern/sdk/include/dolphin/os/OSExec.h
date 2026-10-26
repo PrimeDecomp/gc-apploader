@@ -14,6 +14,7 @@ typedef struct {
 } OSExecParams;
 
 OSExecParams* __OSExecParams AT_ADDRESS(0x800030F0);
+extern OSExecParams __OSRebootParams;
 
 void __OSGetExecParams(OSExecParams* params);
 
