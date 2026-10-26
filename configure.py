@@ -177,8 +177,8 @@ else:
         DolphinLib('dvd', [
             Object(NonMatching, 'dolphin/dvd/dvdlow.c'),
             Object(NonMatching, 'dolphin/dvd/dvd.c'),
-            Object(NonMatching, 'dolphin/dvd/dvdqueue.c'),
-            Object(NonMatching, 'dolphin/dvd/dvderror.c'),
+            Object(Matching, 'dolphin/dvd/dvdqueue.c', cflags=cflags_trailer),
+            Object(Matching, 'dolphin/dvd/dvderror.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/dvd/dvdidutils.c'),
         ]),
         DolphinLib('os', [
