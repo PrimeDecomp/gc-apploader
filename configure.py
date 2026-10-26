@@ -133,6 +133,7 @@ if args.part == 'loader':
         Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
             Object(Matching, 'runtime/__mem.c'),
             Object(MatchingFor('20010522D'), 'runtime/__va_arg.c'),
+            Object(MatchingFor('20010522D'), 'runtime/runtime.c'),
         ], src_dir='extern/sdk'),
     ]
 else:
@@ -188,7 +189,7 @@ else:
             Object(MatchingFor('20020328'), 'runtime/__va_arg.c'),
             Object(NonMatching, 'runtime/global_destructor_chain.c'),
             Object(NonMatching, 'runtime/CPlusLibPPC.c'),
-            Object(NonMatching, 'runtime/runtime.c'),
+            Object(MatchingFor('20020328'), 'runtime/runtime.c'),
             Object(NonMatching, 'runtime/MSL.c'),
         ], src_dir='extern/sdk'),
         DolphinLib('card', [
