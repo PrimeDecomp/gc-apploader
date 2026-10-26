@@ -48,6 +48,8 @@ u32 OSGetConsoleType(void);
 void PPCHalt(void);
 void DCInvalidateRange(void* address, u32 length);
 void DCFlushRange(void* address, u32 length);
+void DCStoreRange(void* address, u32 length);
+void ICInvalidateRange(void* address, u32 length);
 void ApploaderEntry(ApploaderInitCallback* init, ApploaderMainCallback* main,
                     ApploaderFinalCallback* final);
 void ApploaderInit(ApploaderReport report);
