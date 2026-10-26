@@ -176,6 +176,9 @@ runtime/ansi_fp.c:
 	.rodata     start:0x813170D8 end:0x81317160
 	.sdata2     start:0x81318F20 end:0x81318F48
 
+runtime/ctype.c:
+	.rodata     start:0x81317160 end:0x81317260
+
 runtime/buffer_io.c:
 	.text       start:0x81314B64 end:0x81314C64
 
@@ -190,6 +193,16 @@ runtime/mem.c:
 
 runtime/mem_funcs.c:
 	.text       start:0x813150CC end:0x813153A8
+
+runtime/misc_io.c:
+	.text       start:0x813153A8 end:0x813153AC
+
+runtime/printf.c:
+	.text       start:0x813153AC end:0x81316BF8
+	.rodata     start:0x81317260 end:0x8131726E
+	.data       start:0x813189F8 end:0x81318C14
+	.sdata      start:0x81318CA0 end:0x81318CA8
+	.sdata2     start:0x81318F48 end:0x81318F50
 
 runtime/string.c:
 	.text       start:0x81316BF8 end:0x81316D80
