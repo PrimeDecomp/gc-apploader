@@ -1,6 +1,7 @@
 #ifndef _DOLPHIN_OSERROR
 #define _DOLPHIN_OSERROR
 
+void OSReport(const char* msg, ...);
 void OSPanic(const char* file, int line, const char* msg, ...);
 
 #ifdef DEBUG

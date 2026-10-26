@@ -121,7 +121,8 @@ if args.part == 'loader':
             Object(MatchingFor('20010522D'), 'dolphin/os/OSContext.c'),
             Object(NonMatching, 'dolphin/os/OSError.c'),
             Object(MatchingFor('20040521'), 'dolphin/os/OSExec.c'),
-            Object(NonMatching, 'dolphin/os/OSInterrupt.c'),
+            Object(MatchingFor('20010522D'), 'dolphin/os/OSInterrupt.c',
+                   extra_cflags=['-use_lmw_stmw on'] if args.version == '20010522D' else []),
             Object(MatchingFor('20010522D'), 'dolphin/os/OSTime.c'),
         ]),
         Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [

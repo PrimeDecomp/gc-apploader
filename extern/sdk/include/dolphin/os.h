@@ -3,7 +3,10 @@
 
 #include "dolphin/dvd.h"
 #include "dolphin/os/OSArena.h"
+#include "dolphin/os/OSContext.h"
 #include "dolphin/os/OSError.h"
+#include "dolphin/os/OSInterrupt.h"
+#include "dolphin/os/OSThread.h"
 #include "dolphin/types.h"
 
 typedef struct OSBootInfo_s {
@@ -20,6 +23,9 @@ typedef struct OSBootInfo_s {
 
 #define OS_CONSOLE_ARTHUR 0x10000002
 
+BOOL OSDisableInterrupts(void);
+BOOL OSEnableInterrupts(void);
+BOOL OSRestoreInterrupts(BOOL level);
 u32 OSGetConsoleType(void);
 void* OSPhysicalToCached(u32 paddr);
 #if !DEBUG
