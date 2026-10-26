@@ -1,4 +1,5 @@
 #include "dolphin/os.h"
+#include "dolphin/os/OSTime.h"
 
 #include "dolphin/base/PPCArch.h"
 #include "dolphin/hw_regs.h"
@@ -14,6 +15,11 @@ extern void __RAS_OSDisableInterrupts_end(void);
 unsigned long long __OSSpuriousInterrupts = 0;
 #endif
 static __OSInterruptHandler* InterruptHandlerTable;
+#if SDK_VERSION >= 20020328
+volatile OSTime __OSLastInterruptTime;
+volatile __OSInterrupt __OSLastInterrupt;
+volatile u32 __OSLastInterruptSrr0;
+#endif
 
 static OSInterruptMask InterruptPrioTable[] = {
     OS_INTERRUPTMASK_PI_ERROR,
@@ -57,8 +63,13 @@ entry    __RAS_OSDisableInterrupts_begin
     mfmsr   r3
     rlwinm  r4, r3, 0, 17, 15
     mtmsr   r4
-    rlwinm  r3, r3, 17, 31, 31
+#if SDK_VERSION >= 20040521
 entry    __RAS_OSDisableInterrupts_end
+#endif
+    rlwinm  r3, r3, 17, 31, 31
+#if SDK_VERSION < 20040521
+entry    __RAS_OSDisableInterrupts_end
+#endif
     blr
   // clang-format on
 }
@@ -74,7 +85,7 @@ asm BOOL OSEnableInterrupts(void) {
   // clang-format on
 }
 
-asm BOOL OSRestoreInterrupts(register BOOL level) {
+asm BOOL OSRestoreInterrupts(register BOOL level){
   // clang-format off
 
     nofralloc
@@ -88,7 +99,11 @@ _disable:
     rlwinm  r5, r4, 0, 17, 15
 _restore:
     mtmsr   r5
+#if SDK_VERSION >= 20040521
+    rlwinm  r3, r4, 17, 31, 31
+#else
     rlwinm  r4, r4, 17, 31, 31
+#endif
     blr
   // clang-format on
 }
@@ -141,6 +156,9 @@ static u32 SetInterruptMask(OSInterruptMask mask, OSInterruptMask current) {
   case __OS_INTERRUPT_MEM_1:
   case __OS_INTERRUPT_MEM_2:
   case __OS_INTERRUPT_MEM_3:
+#if SDK_VERSION >= 20020328
+  case __OS_INTERRUPT_MEM_ADDRESS:
+#endif
     reg = 0;
     if (!(current & OS_INTERRUPTMASK_MEM_0))
       reg |= 0x1;
@@ -444,6 +462,13 @@ void __OSDispatchInterrupt(__OSException exception, OSContext* context) {
 
     handler = __OSGetInterruptHandler(interrupt);
     if (handler) {
+#if SDK_VERSION >= 20020328
+      if (__OS_INTERRUPT_MEM_ADDRESS < interrupt) {
+        __OSLastInterrupt = interrupt;
+        __OSLastInterruptTime = OSGetTime();
+        __OSLastInterruptSrr0 = context->srr0;
+      }
+#endif
       OSDisableScheduler();
       handler(interrupt, context);
       OSEnableScheduler();
@@ -470,6 +495,9 @@ static asm void ExternalInterruptHandler(register __OSException exception,
   // clang-format off
   nofralloc
   OS_EXCEPTION_SAVE_GPRS(context)
+#if SDK_VERSION >= 20040521
+  stwu r1, -0x8(r1)
+#endif
 
   b __OSDispatchInterrupt
   // clang-format on
