@@ -1,0 +1,9 @@
+#ifndef _STDIO_H_
+#define _STDIO_H_
+
+#include <stdarg.h>
+
+int printf(const char* format, ...);
+int vprintf(const char* format, va_list arg);
+
+#endif
