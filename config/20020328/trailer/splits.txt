@@ -13,10 +13,13 @@ Sections:
 trailer/Boot.c:
 	.text       start:0x81300340 end:0x813004C0
 	.data       start:0x81317280 end:0x81317298
+	.sbss       start:0x81318CC0 end:0x81318CD0
 
 trailer/BS2Mach.c:
 	.text       start:0x813004C0 end:0x81300920
 	.data       start:0x81317298 end:0x813173D0
+	.sbss       start:0x81318CD0 end:0x81318CE0
+	.bss        start:0x81318F60 end:0x81318FF0
 
 trailer/CRC.c:
 	.text       start:0x81300920 end:0x81300BB8
@@ -118,7 +121,12 @@ dolphin/dvd/dvdidutils.c:
 	.text       start:0x8130C108 end:0x8130C2D8
 
 dolphin/vi.c:
-	.text       start:0x8130C2D8 end:0x8130DDDC
+	.text       start:0x8130C2D8 end:0x8130DD78
+
+dolphin/pad/Pad.c:
+	.text       start:0x8130DD78 end:0x8130DDDC
+	.sdata      start:0x81318C88 end:0x81318C8C
+	.sbss       start:0x81318EB8 end:0x81318EBC
 
 dolphin/dsp/dsp.c:
 	.text       start:0x8130DDDC end:0x8130DFA0
