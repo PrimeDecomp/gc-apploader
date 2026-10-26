@@ -5,6 +5,9 @@
 
 OSThreadQueue __OSActiveThreadQueue AT_ADDRESS(0x800000dc);
 
+extern BOOL __OSInIPL;
+
+u32 __OSGetDIConfig(void);
 BOOL __OSSyncSram(void);
 int __OSCallResetFunctions(BOOL final);
 void __OSShutdownDevices(BOOL doRecal);

@@ -27,6 +27,7 @@ typedef struct OSBootInfo_s {
 #define OFFSET(addr, align) (((u32)(addr) & ((align) - 1)))
 
 u32 __OSBusClock AT_ADDRESS(0x800000F8);
+volatile u16 __OSDeviceCode AT_ADDRESS(0x800030E6);
 #define OS_BUS_CLOCK __OSBusClock
 #define OS_TIMER_CLOCK (OS_BUS_CLOCK / 4)
 #define OSTicksToMilliseconds(ticks) ((ticks) / (OS_TIMER_CLOCK / 1000))
@@ -39,6 +40,7 @@ BOOL OSDisableInterrupts(void);
 BOOL OSEnableInterrupts(void);
 BOOL OSRestoreInterrupts(BOOL level);
 u32 OSGetConsoleType(void);
+void OSRegisterVersion(const char* version);
 void* OSPhysicalToCached(u32 paddr);
 #if !DEBUG
 #define OSPhysicalToCached(paddr) ((void*)(0x80000000u + (u32)(paddr)))
