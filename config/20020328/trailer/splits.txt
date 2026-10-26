@@ -190,8 +190,16 @@ runtime/string.c:
 	.text       start:0x81316BF8 end:0x81316D80
 	.sdata      start:0x81318CA8 end:0x81318CB0
 
+runtime/uart_console_io.c:
+	.text       start:0x81316D80 end:0x81316F00
+	.sbss       start:0x81318F00 end:0x81318F04
+
 runtime/wchar_io.c:
 	.text       start:0x81316F00 end:0x81316F80
+
+runtime/s_frexp.c:
+	.text       start:0x81316F80 end:0x8131701C
+	.sdata2     start:0x81318F50 end:0x81318F58
 
 runtime/__mem.c:
 	.init       start:0x8130015C end:0x813002A0
