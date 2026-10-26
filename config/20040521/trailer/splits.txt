@@ -13,6 +13,14 @@ Sections:
 dolphin/PPCArch.c:
 	.text       start:0x813012FC end:0x81301408
 
+dolphin/os/OSArena.c:
+	.text       start:0x81302630 end:0x8130267C
+	.sdata      start:0x8131C1B0 end:0x8131C1B4
+	.sbss       start:0x8131C2D8 end:0x8131C2DC
+
+dolphin/os/OSLink.c:
+	.text       start:0x81306278 end:0x81306290
+
 dolphin/os/__start.c:
 	.init       start:0x81300000 end:0x81300168
 
