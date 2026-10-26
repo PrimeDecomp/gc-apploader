@@ -192,9 +192,9 @@ else:
             Object(NonMatching, 'dolphin/os/OSMemory.c'),
             Object(NonMatching, 'dolphin/os/OSReset.c'),
             Object(NonMatching, 'dolphin/os/OSRtc.c'),
-            Object(NonMatching, 'dolphin/os/OSSync.c'),
+            Object(Matching, 'dolphin/os/OSSync.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/os/OSThread.c'),
-            Object(NonMatching, 'dolphin/os/OSTime.c'),
+            Object(Matching, 'dolphin/os/OSTime.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/os/__ppc_eabi_init.c'),
         ]),
         DolphinLib('vi', [

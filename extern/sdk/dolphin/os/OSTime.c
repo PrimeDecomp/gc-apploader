@@ -1,7 +1,8 @@
-#include "dolphin/types.h"
+#include "dolphin/os/OSTime.h"
+#include "dolphin/os.h"
 
 /* clang-format off */
-asm s64 OSGetTime(void) {
+asm OSTime OSGetTime(void) {
 jump:
   nofralloc
   mftbu r3
@@ -11,4 +12,21 @@ jump:
   bne jump
   blr
 }
-/* clang-format on */
+
+asm OSTick OSGetTick(void) {
+  nofralloc
+  mftb r3
+  blr
+} /* clang-format on */
+
+OSTime __OSGetSystemTime(void) {
+  BOOL enabled;
+  OSTime* timeAdjustAddr;
+  OSTime result;
+
+  timeAdjustAddr = __OSSystemTime;
+  enabled = OSDisableInterrupts();
+  result = OSGetTime() + *timeAdjustAddr;
+  OSRestoreInterrupts(enabled);
+  return result;
+}
