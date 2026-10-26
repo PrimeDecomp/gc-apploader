@@ -15,7 +15,7 @@ int __read_console(__file_handle handle, unsigned char* buffer, size_t* count,
                    __idle_proc idle_proc);
 int __write_console(__file_handle handle, unsigned char* buffer, size_t* count,
                     __idle_proc idle_proc);
-int __close_console(void);
+int __close_console(__file_handle handle);
 
 #ifdef __cplusplus
 }

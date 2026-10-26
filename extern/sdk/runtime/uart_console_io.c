@@ -51,4 +51,4 @@ __declspec(weak) int __write_console(__file_handle handle, unsigned char* buffer
   return 0;
 }
 
-int __close_console(void) { return 0x0; }
+int __close_console(__file_handle handle) { return 0x0; }
