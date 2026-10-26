@@ -6,6 +6,9 @@
 #define RETURNFUNC_MAXSIZE 0x80
 #define RETURNFUNC_ADDRESS (0x81300000 - RETURNFUNC_MAXSIZE)
 #define APPLOADER_CHECK(condition, message) ((condition) || (Report message, PPCHalt(), FALSE))
+#elif !DEBUG
+#define APPLOADER_CHECK(condition, message)                                                        \
+  ((void)((condition) || (Report message, PPCHalt(), FALSE)))
 #else
 #define APPLOADER_CHECK(condition, message)                                                        \
   do {                                                                                             \
@@ -318,6 +321,9 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
 #endif
   BootInfo* bootInfo = OSPhysicalToCached(0);
   u32 limit;
+#if !DEBUG
+  u32 monitorSize;
+#endif
 #if APPLOADER_VERSION >= 20020328
   u32 response[2];
 #endif
@@ -344,11 +350,20 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
     break;
   case kLoad_MemoryLayout:
     DEBUG_MONITOR_SIZE = DiscBootInfo[0];
+#if !DEBUG
+    monitorSize = DEBUG_MONITOR_SIZE;
+    DEBUG_MONITOR_ADDRESS = ROUND_DOWN_32(bootInfo->memorySize + 0x80000000 - monitorSize);
+    SIMULATED_MEMORY_SIZE = DiscBootInfo[1];
+    APPLOADER_CHECK(
+        (monitorSize & 31) == 0,
+        ("APPLOADER ERROR >>> Debug monitor size (%d) should be a multiple of 32\n", monitorSize));
+#else
     DEBUG_MONITOR_ADDRESS = ROUND_DOWN_32(bootInfo->memorySize + 0x80000000 - DEBUG_MONITOR_SIZE);
     SIMULATED_MEMORY_SIZE = DiscBootInfo[1];
     APPLOADER_CHECK((DEBUG_MONITOR_SIZE & 31) == 0,
                     ("APPLOADER ERROR >>> Debug monitor size (%d) should be a multiple of 32\n",
                      DEBUG_MONITOR_SIZE));
+#endif
     APPLOADER_CHECK((SIMULATED_MEMORY_SIZE & 31) == 0,
                     ("APPLOADER ERROR >>> Simulated memory size (%d) should be a multiple of 32\n",
                      SIMULATED_MEMORY_SIZE));
@@ -368,11 +383,11 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
     } else if (SIMULATED_MEMORY_SIZE == bootInfo->memorySize) {
       DiscLayout.fstAddress = (void*)ROUND_DOWN_32(DEBUG_MONITOR_ADDRESS - DiscLayout.fstMaxLength);
     } else {
-      Report("APPLOADER ERROR >>> Physical memory size is 0x%x bytes.\n"
-             "APPLOADER ERROR >>> Console simulated memory size must be smaller than or equal "
-             "to the Physical memory size\n",
-             bootInfo->memorySize, SIMULATED_MEMORY_SIZE);
-      PPCHalt();
+      APPLOADER_CHECK(
+          FALSE, ("APPLOADER ERROR >>> Physical memory size is 0x%x bytes.\n"
+                  "APPLOADER ERROR >>> Console simulated memory size must be smaller than or equal "
+                  "to the Physical memory size\n",
+                  bootInfo->memorySize, SIMULATED_MEMORY_SIZE));
 #else
     } else {
       if (SIMULATED_MEMORY_SIZE > bootInfo->memorySize) {
@@ -435,8 +450,12 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
     break;
   case kLoad_ValidateDol: {
     u32 size = ApploaderGetDolSize();
+#if !DEBUG
+    if ((limit = ((u32*)BOOT_INFO_2)[10])
+#else
     limit = ((u32*)BOOT_INFO_2)[10];
     if (limit
+#endif
 #if APPLOADER_VERSION >= 20040521
         && !ExecParams.valid
 #endif

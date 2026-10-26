@@ -109,7 +109,7 @@ def DolphinLib(name, objects):
 if args.part == 'loader':
     config.libs = [
         Library('Apploader', 'GC/1.2.5n', cflags_apploader, [
-            Object(MatchingFor('20020328', '20010522D', '20040521'), 'apploader/Apploader.c'),
+            Object(Matching, 'apploader/Apploader.c'),
         ]),
         DolphinLib('base', [
             Object(Matching, 'dolphin/PPCArch.c'),
