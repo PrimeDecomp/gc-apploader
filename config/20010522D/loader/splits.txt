@@ -59,6 +59,15 @@ runtime/__va_arg.c:
 runtime/runtime.c:
 	.text       start:0x81202190 end:0x81202498
 
+runtime/buffer_io.c:
+	.text       start:0x8120284C end:0x8120294C
+
+runtime/direct_io.c:
+	.text       start:0x8120294C end:0x81202C28
+
+runtime/mbstring.c:
+	.text       start:0x81202C28 end:0x81202C64
+
 runtime/mem.c:
 	.text       start:0x81202C64 end:0x81202D6C
 
@@ -68,6 +77,9 @@ runtime/mem_funcs.c:
 runtime/string.c:
 	.text       start:0x81204898 end:0x8120499C
 	.sdata      start:0x81206100 end:0x81206108
+
+runtime/wchar_io.c:
+	.text       start:0x81204B1C end:0x81204B9C
 
 runtime/__mem.c:
 	.init       start:0x81200000 end:0x81200144
