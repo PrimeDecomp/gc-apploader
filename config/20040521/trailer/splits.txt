@@ -42,6 +42,9 @@ dolphin/os/OSInterrupt.c:
 dolphin/os/OSLink.c:
 	.text       start:0x81306278 end:0x81306290
 
+dolphin/os/OSReboot.c:
+	.text       start:0x813065D8 end:0x813065F4
+
 dolphin/os/OSReset.c:
 	.text       start:0x813065F4 end:0x813069C0
 	.sbss       start:0x8131C310 end:0x8131C318
