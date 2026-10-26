@@ -122,6 +122,8 @@ if args.part == 'loader':
             Object(MatchingFor('20010522D'), 'dolphin/os/OSError.c',
                    extra_cflags=['-opt peephole', '-use_lmw_stmw on'] if args.version == '20010522D' else []),
             Object(MatchingFor('20040521'), 'dolphin/os/OSExec.c'),
+            Object(MatchingFor('20010522D'), 'dolphin/os/OSExi.c',
+                   extra_cflags=['-opt peephole', '-use_lmw_stmw on'] if args.version == '20010522D' else []),
             Object(MatchingFor('20010522D'), 'dolphin/os/OSInterrupt.c',
                    extra_cflags=['-use_lmw_stmw on'] if args.version == '20010522D' else []),
             Object(MatchingFor('20010522D'), 'dolphin/os/OSTime.c'),

@@ -21,6 +21,13 @@ typedef struct OSBootInfo_s {
   u32 FSTMaxLength;
 } OSBootInfo;
 
+#define OFFSET(addr, align) (((u32)(addr) & ((align) - 1)))
+
+u32 __OSBusClock AT_ADDRESS(0x800000F8);
+#define OS_BUS_CLOCK __OSBusClock
+#define OS_TIMER_CLOCK (OS_BUS_CLOCK / 4)
+#define OSTicksToMilliseconds(ticks) ((ticks) / (OS_TIMER_CLOCK / 1000))
+
 #define OS_CONSOLE_ARTHUR 0x10000002
 
 BOOL OSDisableInterrupts(void);
