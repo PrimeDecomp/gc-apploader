@@ -168,14 +168,16 @@ dolphin/dsp/dsp_task.c:
 	.data       start:0x813185D8 end:0x81318718
 	.sbss       start:0x81318EC8 end:0x81318EE0
 
-runtime/ansi_files.c:
-	.data       start:0x81318920 end:0x813189F8
-
 dolphin/card/CARDBios.c:
 	.text       start:0x8130E824 end:0x8130FB44
 
 dolphin/card/CARDUnlock.c:
 	.text       start:0x8130FB44 end:0x81310DA4
+	.data       start:0x81318740 end:0x813188A0 align:32
+	.sdata      start:0x81318C90 end:0x81318C94
+
+runtime/ansi_files.c:
+	.data       start:0x81318920 end:0x813189F8
 
 dolphin/card/CARDRdwr.c:
 	.text       start:0x81310DA4 end:0x81311024
