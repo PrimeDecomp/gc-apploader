@@ -71,9 +71,6 @@ dolphin/os/OSMemory.c:
 	.text       start:0x813047BC end:0x81304A9C
 	.data       start:0x81317EA0 end:0x81317EB0
 
-runtime/ansi_files.c:
-	.data       start:0x81318920 end:0x813189F8
-
 dolphin/os/OSReset.c:
 	.text       start:0x81304A9C end:0x81304C08
 	.sbss       start:0x81318D40 end:0x81318D48
@@ -108,12 +105,18 @@ dolphin/exi/EXIBios.c:
 
 dolphin/exi/EXIUart.c:
 	.text       start:0x81307520 end:0x81307798
+	.sbss       start:0x81318D70 end:0x81318D80
 
 dolphin/si/SIBios.c:
 	.text       start:0x81307798 end:0x8130883C
 
 dolphin/si/SISamplingRate.c:
 	.text       start:0x8130883C end:0x81308944
+	.data       start:0x81317F80 end:0x81318018
+	.sbss       start:0x81318D90 end:0x81318D94
+
+runtime/ansi_files.c:
+	.data       start:0x81318920 end:0x813189F8
 
 dolphin/db.c:
 	.text       start:0x81308944 end:0x81308A30
