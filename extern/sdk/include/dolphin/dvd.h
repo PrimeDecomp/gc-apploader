@@ -29,6 +29,17 @@ struct DVDCommandBlock {
   DVDCBCallback callback;
   void* userData;
 };
+typedef struct DVDBB2 {
+  u32 bootFilePosition;
+  u32 FSTPosition;
+  u32 FSTLength;
+  u32 FSTMaxLength;
+  void* FSTAddress;
+  u32 userPosition;
+  u32 userLength;
+  u32 padding0;
+} DVDBB2;
+
 typedef struct DVDDriveInfo {
   u16 revisionLevel;
   u16 deviceCode;
@@ -37,6 +48,12 @@ typedef struct DVDDriveInfo {
 } DVDDriveInfo;
 
 void DVDInit(void);
+void DVDReset(void);
+s32 DVDGetDriveStatus(void);
+int DVDReadDiskID(DVDCommandBlock* block, DVDDiskID* diskID, DVDCBCallback callback);
+int DVDCompareDiskID(const DVDDiskID* id1, const DVDDiskID* id2);
+DVDDiskID* DVDGenerateDiskID(DVDDiskID* id, const char* game, const char* company, u8 diskNum,
+                             u8 version);
 struct OSAlarm;
 BOOL __DVDTestAlarm(const struct OSAlarm* alarm);
 BOOL DVDCheckDisk(void);

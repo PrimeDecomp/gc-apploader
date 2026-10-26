@@ -24,6 +24,8 @@ typedef struct OSBootInfo_s {
 #define OS_CACHED_REGION_PREFIX 0x8000
 #define OS_BASE_CACHED (OS_CACHED_REGION_PREFIX << 16)
 
+#define OSRoundUp32B(x) (((u32)(x) + 32 - 1) & ~(32 - 1))
+
 #define OFFSET(addr, align) (((u32)(addr) & ((align) - 1)))
 
 u32 __OSBusClock AT_ADDRESS(0x800000F8);
