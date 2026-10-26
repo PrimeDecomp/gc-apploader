@@ -14,6 +14,10 @@ trailer/Boot.c:
 	.text       start:0x813003A0 end:0x813006E4
 	.data       start:0x81319940 end:0x81319990
 
+trailer/CRC.c:
+	.text       start:0x813006E4 end:0x8130079C
+	.sbss       start:0x8131C280 end:0x8131C284
+
 dolphin/PPCArch.c:
 	.text       start:0x813012FC end:0x81301408
 
