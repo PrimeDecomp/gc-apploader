@@ -176,9 +176,6 @@ dolphin/card/CARDUnlock.c:
 	.data       start:0x81318740 end:0x813188A0 align:32
 	.sdata      start:0x81318C90 end:0x81318C94
 
-runtime/ansi_files.c:
-	.data       start:0x81318920 end:0x813189F8
-
 dolphin/card/CARDRdwr.c:
 	.text       start:0x81310DA4 end:0x81311024
 
@@ -193,6 +190,10 @@ dolphin/card/CARDCheck.c:
 
 dolphin/card/CARDMount.c:
 	.text       start:0x81312558 end:0x81312FE8
+	.data       start:0x813188A0 end:0x813188E0
+
+runtime/ansi_files.c:
+	.data       start:0x81318920 end:0x813189F8
 
 dolphin/card/CARDOpen.c:
 	.text       start:0x81312FE8 end:0x813132E4

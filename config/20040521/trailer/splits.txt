@@ -164,6 +164,10 @@ dolphin/card/CARDDir.c:
 dolphin/card/CARDCheck.c:
 	.text       start:0x81314E3C end:0x81315DA4
 
+dolphin/card/CARDMount.c:
+	.text       start:0x81315DA4 end:0x813168A8
+	.data       start:0x8131C040 end:0x8131C080
+
 dolphin/card/CARDOpen.c:
 	.text       start:0x813168A8 end:0x81316D3C
 
