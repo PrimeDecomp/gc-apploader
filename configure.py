@@ -197,6 +197,10 @@ else:
             Object(Matching, 'dolphin/os/OSTime.c', cflags=cflags_trailer),
             Object(NonMatching, 'dolphin/os/__ppc_eabi_init.c'),
         ]),
+        DolphinLib('pad', [
+            Object(MatchingFor('20020328'), 'dolphin/pad/Pad.c', cflags=cflags_trailer,
+                   extra_cflags=['-schedule off']),
+        ]),
         DolphinLib('vi', [
             Object(NonMatching, 'dolphin/vi.c'),
         ]),
