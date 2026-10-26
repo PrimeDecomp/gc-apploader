@@ -1,6 +1,0 @@
-# Numbers are hexadecimal. Offsets are relative to the selected image part.
-part loader
-entry 81200268
-section .text 0 81200000 e00 code 20
-section .data e00 81200e00 660 data 20
-section .bss 1460 81201460 174 bss 20

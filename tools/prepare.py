@@ -24,11 +24,10 @@ tool = Path('build/apploader' + ('.exe' if os.name == 'nt' else ''))
 subprocess.run(shlex.split(os.environ.get('CC', 'cc')) + [
     '-std=c99', '-O2', '-Wall', '-Wextra', '-Werror', 'tools/apploader.c', '-o', str(tool)
 ], check=True)
-for layout in sorted(root.glob('*.layout')):
-    part = layout.stem
+for part in ['loader', 'trailer']:
     elf = original / f'{part}.elf'
-    subprocess.run([str(tool), 'to-elf', str(image), str(layout), str(elf)], check=True)
+    subprocess.run([str(tool), 'to-elf', str(image), part, str(elf)], check=True)
     # ALF retains explicit BSS boundaries when there is no SDK initialization table.
-    subprocess.run([str(tool), 'to-alf', str(elf), str(layout), str(original / f'{part}.alf')], check=True)
+    subprocess.run([str(tool), 'to-alf', str(elf), str(original / f'{part}.alf')], check=True)
     subprocess.run([str(args.dtk), 'dol', 'split', str(root / part / 'config.yml'),
                     str(Path('build') / args.version / part)], check=True)

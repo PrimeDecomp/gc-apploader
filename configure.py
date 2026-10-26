@@ -53,7 +53,7 @@ config.ldflags = [
     '-fp hardware', '-nodefaults',
     '-m ApploaderEntry' if args.part == 'loader' else '-m __start',
 ]
-config.reconfig_deps = [root / f'{args.part}.layout']
+config.reconfig_deps = []
 config.warn_missing_config = False
 config.warn_missing_source = True
 Matching = True

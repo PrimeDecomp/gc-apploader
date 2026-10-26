@@ -85,76 +85,188 @@ static void header(Buffer b) {
   range(32 + (size_t)be32(b.data + 20), be32(b.data + 24), b.size);
 }
 
-static Layout layout(const char* path) {
-  Layout l;
-  char line[512], word[64], kind[16], extra;
-  unsigned a, b, c, d;
-  FILE* f = fopen(path, "r");
-  memset(&l, 0, sizeof(l));
-  if (!f)
-    fail(path);
-  while (fgets(line, sizeof(line), f)) {
-    if (sscanf(line, " %63s", word) != 1 || word[0] == '#')
-      continue;
-    if (!strcmp(word, "part")) {
-      if (sscanf(line, "part %15s %c", kind, &extra) != 1)
-        fail("invalid part");
-      if (!strcmp(kind, "loader"))
-        l.trailer = 0;
-      else if (!strcmp(kind, "trailer"))
-        l.trailer = 1;
-      else
-        fail("unknown part");
-    } else if (!strcmp(word, "entry")) {
-      if (sscanf(line, "entry %x %c", &a, &extra) != 1)
-        fail("invalid entry");
-      l.entry = a;
-    } else if (!strcmp(word, "section")) {
-      Section* s;
-      size_t i;
-      if (l.count == MAX_SECTIONS - 4)
-        fail("too many sections");
-      s = &l.sections[l.count];
-      if (sscanf(line, "section %63s %x %x %x %15s %x %c", s->name, &a, &b, &c, kind, &d, &extra) !=
-          6)
-        fail("invalid section");
-      s->offset = a;
-      s->address = b;
-      s->size = c;
-      s->align = d;
-      s->type = 1;
-      s->flags = 2;
-      if (!c || (uint64_t)b + c > UINT32_MAX || b % alignup(1, d))
-        fail("invalid section range/alignment");
-      if (!strcmp(kind, "code"))
-        s->flags |= 4;
-      else if (!strcmp(kind, "data"))
-        s->flags |= 1;
-      else if (!strcmp(kind, "bss")) {
-        s->flags |= 1;
-        s->type = 8;
-      } else if (strcmp(kind, "rodata"))
-        fail("unknown section kind");
-      for (i = 0; i < l.count; i++) {
-        Section* p = &l.sections[i];
-        if (!strcmp(p->name, s->name) || ((uint64_t)p->address + p->size > s->address &&
-                                          (uint64_t)s->address + s->size > p->address))
-          fail("duplicate/overlapping sections");
-        if ((uint64_t)p->offset + p->size > s->offset && (uint64_t)s->offset + s->size > p->offset)
-          fail("overlapping image ranges");
-      }
-      l.count++;
-    } else
-      fail("unknown layout directive");
+/* The boot ROM loads the loader at this platform-defined address. */
+#define LOADER_ADDRESS 0x81200000u
+
+static void add_section(Layout* l, const char* name, uint32_t offset, uint32_t address,
+                        uint32_t size, uint32_t type, uint32_t flags, uint32_t align) {
+  Section* s;
+  size_t i;
+  if (!size || l->count >= MAX_SECTIONS - 4 || strlen(name) >= sizeof(l->sections[0].name))
+    fail("invalid section");
+  if ((uint64_t)address + size > UINT32_MAX)
+    fail("section address overflow");
+  for (i = 0; i < l->count; ++i) {
+    Section* other = &l->sections[i];
+    if (!strcmp(name, other->name) || ((uint64_t)address + size > other->address &&
+                                       (uint64_t)other->address + other->size > address))
+      fail("overlapping or duplicate sections");
   }
-  if (ferror(f) || fclose(f) || !l.count)
-    fail("invalid layout");
+  s = &l->sections[l->count++];
+  strcpy(s->name, name);
+  s->offset = offset;
+  s->address = address;
+  s->size = size;
+  s->type = type;
+  s->flags = flags;
+  s->align = align;
+}
+
+static int address_pair(uint32_t high, uint32_t low, uint32_t* address) {
+  unsigned reg = (high >> 21) & 31;
+  if ((high & 0xfc1f0000) != 0x3c000000)
+    return 0;
+  if ((low >> 26) == 14 && ((low >> 16) & 31) == reg) {
+    *address = (high << 16) + (int16_t)low;
+    return 1;
+  }
+  if ((low >> 26) == 24 && ((low >> 21) & 31) == reg) {
+    *address = (high << 16) | (low & 0xffff);
+    return 1;
+  }
+  return 0;
+}
+
+static int is_string(const unsigned char* data, size_t size, size_t offset) {
+  size_t start = offset;
+  while (offset < size && data[offset]) {
+    unsigned c = data[offset++];
+    if ((c < 32 || c > 126) && c != '\n' && c != '\r' && c != '\t')
+      return 0;
+  }
+  return offset < size && offset - start >= 16;
+}
+
+static Layout loader_layout(Buffer image) {
+  Layout l = {0};
+  const unsigned char* body = image.data + 32;
+  uint32_t size = be32(image.data + 20), data = size, bss = size, zero = size;
+  uint32_t i, address;
+  l.entry = be32(image.data + 16);
+  if (l.entry < LOADER_ADDRESS || (uint64_t)l.entry >= (uint64_t)LOADER_ADDRESS + size)
+    fail("loader entry is outside the boot ROM load range");
+  while (zero && body[zero - 1] == 0)
+    --zero;
+
+  /* Literal addresses used by the code identify the pooled strings and static
+   * storage. Do not classify arbitrary printable instruction bytes as data. */
+  for (i = 0; i + 8 <= size; i += 4) {
+    uint32_t offset;
+    if (!address_pair(be32(body + i), be32(body + i + 4), &address) || address < LOADER_ADDRESS)
+      continue;
+    offset = address - LOADER_ADDRESS;
+    if (offset >= size)
+      continue;
+    if (offset > i && is_string(body, size, offset) && offset < data)
+      data = offset;
+    if (offset >= zero && !(offset & 31) && offset < bss)
+      bss = offset;
+  }
+  if (data == size || bss == size || data >= bss || (data & 31))
+    fail("cannot establish loader code/data/BSS boundaries from its references");
+  if (l.entry >= LOADER_ADDRESS + data)
+    fail("loader entry overlaps detected data");
+  add_section(&l, ".text", 0, LOADER_ADDRESS, data, 1, 6, 32);
+  add_section(&l, ".data", data, LOADER_ADDRESS + data, bss - data, 1, 3, 32);
+  add_section(&l, ".bss", bss, LOADER_ADDRESS + bss, size - bss, 8, 3, 32);
+  return l;
+}
+
+static Layout trailer_layout(Buffer image) {
+  Layout l = {0};
+  const unsigned char* body = image.data + 32 + be32(image.data + 20);
+  uint32_t size = be32(image.data + 24), table, base = 0, count = 0, pos, i;
+  static const char* names[] = {".init",   ".text", ".ctors", ".dtors",
+                                ".rodata", ".data", ".sdata", ".sdata2"};
+  l.trailer = 1;
+  /* Find a complete SDK ROM-copy table. Its first entry maps the image base to
+   * itself, and every initialized range must fit inside the trailer. */
+  for (table = 0; table + 36 <= size; table += 4) {
+    uint32_t previous = 0;
+    base = be32(body + table);
+    if (base < 0x80000000 || base >= 0x81800000 || (base & 31) || be32(body + table + 4) != base)
+      continue;
+    count = 0;
+    for (pos = table; pos + 12 <= size; pos += 12) {
+      uint32_t source = be32(body + pos), dest = be32(body + pos + 4);
+      uint32_t length = be32(body + pos + 8);
+      if (!source && !dest && !length)
+        break;
+      if (!length || source != dest || source < base || source - base > size ||
+          length > size - (source - base) || (count && source < previous) ||
+          count >= MAX_SECTIONS - 8) {
+        count = 0;
+        break;
+      }
+      previous = source + length;
+      ++count;
+    }
+    if (count >= 2 && pos + 12 <= size && be32(body + table + 8) >= pos + 12)
+      break;
+  }
+  if (table + 36 > size || count < 2)
+    fail("cannot find a complete trailer ROM-copy table");
+  l.entry = base;
+  for (i = 0; i < count; ++i) {
+    uint32_t address = be32(body + table + i * 12);
+    uint32_t length = be32(body + table + i * 12 + 8);
+    char fallback[32];
+    const char* name;
+    if (count == sizeof(names) / sizeof(names[0]))
+      name = names[i];
+    else if (i < 2)
+      name = names[i];
+    else {
+      snprintf(fallback, sizeof(fallback), ".data%u", i);
+      name = fallback;
+    }
+    add_section(&l, name, address - base, address, length, 1,
+                i < 2 ? 6
+                      : ((!strcmp(name, ".rodata") || !strcmp(name, ".sdata2") ||
+                          !strcmp(name, ".ctors") || !strcmp(name, ".dtors"))
+                             ? 2
+                             : 3),
+                i == 0 ? 4 : 32);
+  }
+  pos = table + (count + 1) * 12;
+  for (i = 0; pos + 8 <= size; pos += 8, ++i) {
+    uint32_t address = be32(body + pos), length = be32(body + pos + 4);
+    const char* name = i == 0 ? ".sbss" : ".bss";
+    if (!address && !length)
+      return l;
+    if (i >= 2 || !length || address < base || address - base > size ||
+        length > size - (address - base))
+      fail("invalid trailer BSS initialization table");
+    add_section(&l, name, address - base, address, length, 8, 3, 32);
+  }
+  fail("unterminated trailer BSS initialization table");
+  return l;
+}
+
+static int compare_sections(const void* left, const void* right) {
+  uint32_t a = ((const Section*)left)->address;
+  uint32_t b = ((const Section*)right)->address;
+  return (a > b) - (a < b);
+}
+
+static Layout detect_layout(Buffer image, const char* part) {
+  Layout l;
+  header(image);
+  if (!strcmp(part, "loader"))
+    l = loader_layout(image);
+  else if (!strcmp(part, "trailer"))
+    l = trailer_layout(image);
+  else {
+    fail("part must be loader or trailer");
+    return (Layout){0};
+  }
+  qsort(l.sections, l.count, sizeof(l.sections[0]), compare_sections);
   return l;
 }
 
 static void toelf(const char* input, const char* spec, const char* output) {
   Buffer in = readfile(input), out;
-  Layout l = layout(spec);
+  Layout l = detect_layout(in, spec);
   size_t i, j, n = l.count;
   uint32_t start, size, pos, shoff, stroff, strsize = 1, phcount = 0;
   unsigned char* used;
@@ -303,6 +415,36 @@ static const unsigned char* section(Buffer elf, const char* name) {
   return NULL;
 }
 
+static Layout elf_layout(Buffer elf) {
+  Layout l = {0};
+  uint32_t offset, stringOffset, base = UINT32_MAX;
+  unsigned count, i;
+  section(elf, "");
+  offset = be32(elf.data + 32);
+  count = be16(elf.data + 48);
+  stringOffset = be32(elf.data + offset + 40 * be16(elf.data + 50) + 16);
+  l.entry = be32(elf.data + 24);
+  for (i = 1; i < count; ++i) {
+    const unsigned char* sh = elf.data + offset + 40 * i;
+    uint32_t address = be32(sh + 12);
+    if ((be32(sh + 8) & 2) && be32(sh + 20) && address < base)
+      base = address;
+  }
+  if (base == UINT32_MAX)
+    fail("ELF has no allocated sections");
+  for (i = 1; i < count; ++i) {
+    const unsigned char* sh = elf.data + offset + 40 * i;
+    uint32_t address = be32(sh + 12), size = be32(sh + 20);
+    if (!(be32(sh + 8) & 2) || !size)
+      continue;
+    if (be32(sh + 4) != 1 && be32(sh + 4) != 8)
+      fail("unsupported allocated section type");
+    add_section(&l, (const char*)elf.data + stringOffset + be32(sh), address - base, address, size,
+                be32(sh + 4), be32(sh + 8), be32(sh + 32));
+  }
+  return l;
+}
+
 static void packpart(Buffer elf, Layout l, unsigned char* out, uint32_t size) {
   size_t i;
   for (i = 0; i < l.count; i++) {
@@ -329,14 +471,14 @@ static void packpart(Buffer elf, Layout l, unsigned char* out, uint32_t size) {
   }
 }
 
-static void pack(const char* metadata, const char* lspec, const char* loader, const char* tspec,
-                 const char* trailer, const char* output) {
+static void pack(const char* metadata, const char* loader, const char* trailer,
+                 const char* output) {
   Buffer meta = readfile(metadata), a = readfile(loader), b = {0}, out;
-  Layout la = layout(lspec);
+  Layout la = elf_layout(a);
   const unsigned char *h = section(meta, ".apploader.header"),
                       *t = section(meta, ".apploader.tail");
   uint32_t body, tsize, tail = 0, hoff;
-  if (!h || be32(h + 20) != 32 || la.trailer)
+  if (!h || be32(h + 20) != 32)
     fail("invalid loader metadata/layout");
   hoff = be32(h + 16);
   range(hoff, 32, meta.size);
@@ -358,10 +500,9 @@ static void pack(const char* metadata, const char* lspec, const char* loader, co
     fail("loader entry point differs from image header");
   packpart(a, la, out.data + 32, body);
   if (tsize) {
-    Layout lb = layout(tspec);
-    if (!lb.trailer)
-      fail("expected trailer layout");
+    Layout lb;
     b = readfile(trailer);
+    lb = elf_layout(b);
     packpart(b, lb, out.data + 32 + body, tsize);
   }
   if (tail)
@@ -381,9 +522,9 @@ static void putle32(unsigned char* p, uint32_t n) {
   p[3] = (unsigned char)(n >> 24);
 }
 
-static void toalf(const char* input, const char* spec, const char* output) {
+static void toalf(const char* input, const char* output) {
   Buffer in = readfile(input), out;
-  Layout l = layout(spec);
+  Layout l = elf_layout(in);
   size_t i, pos = 16;
   section(in, ""); /* Validate the ELF before reading its header. */
   out.size = 24 + l.count * 12;
@@ -430,15 +571,15 @@ int main(int argc, char** argv) {
     free(b.data);
   } else if (argc == 5 && !strcmp(argv[1], "to-elf"))
     toelf(argv[2], argv[3], argv[4]);
-  else if (argc == 5 && !strcmp(argv[1], "to-alf"))
-    toalf(argv[2], argv[3], argv[4]);
-  else if (argc == 8 && !strcmp(argv[1], "pack"))
-    pack(argv[2], argv[3], argv[4], argv[5], argv[6], argv[7]);
+  else if (argc == 4 && !strcmp(argv[1], "to-alf"))
+    toalf(argv[2], argv[3]);
+  else if (argc == 6 && !strcmp(argv[1], "pack"))
+    pack(argv[2], argv[3], argv[4], argv[5]);
   else {
     fprintf(stderr,
-            "Usage:\n  apploader info IMAGE\n  apploader to-elf IMAGE LAYOUT OUTPUT.elf\n  "
-            "apploader to-alf INPUT.elf LAYOUT OUTPUT.alf\n  apploader "
-            "pack METADATA.elf LOADER.layout LOADER.elf TRAILER.layout TRAILER.elf OUTPUT.img\n");
+            "Usage:\n  apploader info IMAGE\n  apploader to-elf IMAGE loader|trailer OUTPUT.elf\n  "
+            "apploader to-alf INPUT.elf OUTPUT.alf\n  apploader "
+            "pack METADATA.elf LOADER.elf TRAILER.elf OUTPUT.img\n");
     return 2;
   }
   return 0;
