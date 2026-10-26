@@ -1,4 +1,40 @@
+static const unsigned long long __constants[] = {
+    0x0000000000000000, // 0.0
+    0x41F0000000000000, // 2**32
+    0x41E0000000000000, // 2**31
+};
+
 /* clang-format off */
+asm unsigned long __cvt_fp2unsigned(register double d) {
+  nofralloc
+  stwu r1, -0x10(r1)
+  lis r4, __constants@h
+  ori r4, r4, __constants@l
+  li r3, 0
+  lfd f0, 0(r4)
+  lfd f3, 8(r4)
+  lfd f4, 0x10(r4)
+  fcmpu cr0, f1, f0
+  fcmpu cr6, f1, f3
+  blt return_unsigned
+  addi r3, r3, -1
+  bge cr6, return_unsigned
+  fcmpu cr7, f1, f4
+  fmr f2, f1
+  blt cr7, convert_integer
+  fsub f2, f1, f4
+convert_integer:
+  fctiwz f2, f2
+  stfd f2, 8(r1)
+  lwz r3, 0xc(r1)
+  blt cr7, return_unsigned
+  addis r3, r3, 0x8000
+return_unsigned:
+  addi r1, r1, 0x10
+  blr
+}
+
+
 asm void __div2u(void) {
   nofralloc
   cmpwi r3, 0

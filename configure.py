@@ -202,8 +202,8 @@ else:
         Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
             Object(Matching, 'runtime/__mem.c'),
             Object(MatchingFor('20020328'), 'runtime/__va_arg.c'),
-            Object(NonMatching, 'runtime/global_destructor_chain.c'),
-            Object(NonMatching, 'runtime/runtime.c'),
+            Object(MatchingFor('20020328'), 'runtime/global_destructor_chain.c'),
+            Object(MatchingFor('20020328'), 'runtime/runtime.c'),
             Object(MatchingFor('20020328'), 'runtime/ansi_files.c'),
             Object(MatchingFor('20020328'), 'runtime/ansi_fp.c'),
             Object(MatchingFor('20020328'), 'runtime/buffer_io.c'),
