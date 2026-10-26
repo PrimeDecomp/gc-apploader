@@ -25,7 +25,7 @@ typedef struct {
 typedef struct {
   u16 wirelessPadFixMode;
   u8 reboot;
-  u8 resetButtonTimer;
+  u8 gameChoice;
   u16 pad3Buttons;
   u16 deviceCode;
 } OSLowMemPad;

@@ -240,7 +240,7 @@ else:
             Object(Matching, 'dolphin/card/CARDBlock.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/card/CARDDir.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/card/CARDCheck.c', cflags=cflags_trailer),
-            Object(NonMatching, 'dolphin/card/CARDMount.c'),
+            Object(Matching, 'dolphin/card/CARDMount.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/card/CARDOpen.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/card/CARDCreate.c', cflags=cflags_trailer),
             Object(Matching, 'dolphin/card/CARDRead.c', cflags=cflags_trailer),
