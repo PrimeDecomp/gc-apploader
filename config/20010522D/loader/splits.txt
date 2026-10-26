@@ -59,6 +59,11 @@ runtime/__va_arg.c:
 runtime/runtime.c:
 	.text       start:0x81202190 end:0x81202498
 
+runtime/ansi_fp.c:
+	.text       start:0x81202498 end:0x8120284C
+	.rodata     start:0x81204C40 end:0x81204CC8
+	.sdata2     start:0x81206140 end:0x81206168
+
 runtime/buffer_io.c:
 	.text       start:0x8120284C end:0x8120294C
 

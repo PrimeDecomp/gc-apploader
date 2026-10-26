@@ -171,6 +171,11 @@ runtime/CPlusLibPPC.c:
 runtime/runtime.c:
 	.text       start:0x8131432C end:0x813146A4
 
+runtime/ansi_fp.c:
+	.text       start:0x813147B0 end:0x81314B64
+	.rodata     start:0x813170D8 end:0x81317160
+	.sdata2     start:0x81318F20 end:0x81318F48
+
 runtime/buffer_io.c:
 	.text       start:0x81314B64 end:0x81314C64
 
