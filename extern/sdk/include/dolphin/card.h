@@ -53,7 +53,9 @@ typedef struct CARDControl {
   s32 latency;
   u8 id[12];
   int mountStep;
+#if SDK_VERSION >= 20040521
   int formatStep;
+#endif
   u32 scramble;
   DSPTaskInfo task;
   void* workArea;
