@@ -176,8 +176,8 @@ else:
             Object(NonMatching, 'dolphin/vi.c'),
         ]),
         Library('MSL_C.PPCEABI.bare.H', 'GC/1.2.5', cflags_runtime, [
-            Object(NonMatching, 'runtime/__mem.c'),
-            Object(NonMatching, 'runtime/__va_arg.c'),
+            Object(Matching, 'runtime/__mem.c'),
+            Object(MatchingFor('20020328'), 'runtime/__va_arg.c'),
             Object(NonMatching, 'runtime/global_destructor_chain.c'),
             Object(NonMatching, 'runtime/CPlusLibPPC.c'),
             Object(NonMatching, 'runtime/runtime.c'),
