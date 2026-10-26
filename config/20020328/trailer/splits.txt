@@ -104,6 +104,7 @@ dolphin/os/__ppc_eabi_init.c:
 
 dolphin/exi/EXIBios.c:
 	.text       start:0x81305C54 end:0x81307520
+	.bss        start:0x81319B20 end:0x81319BE0
 
 dolphin/exi/EXIUart.c:
 	.text       start:0x81307520 end:0x81307798
