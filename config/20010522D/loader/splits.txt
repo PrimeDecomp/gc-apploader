@@ -27,6 +27,9 @@ dolphin/os/OSAddress.c:
 dolphin/os/OSCache.c:
 	.text       start:0x81200A9C end:0x81200B00
 
+dolphin/os/OSContext.c:
+	.text       start:0x81200B00 end:0x81200B08
+
 dolphin/os/OSError.c:
 	.text       start:0x81200B08 end:0x81200CAC
 
