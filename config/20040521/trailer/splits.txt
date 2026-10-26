@@ -147,6 +147,13 @@ dolphin/dsp/dsp_task.c:
 	.data       start:0x8131BD48 end:0x8131BE88
 	.sbss       start:0x8131C4E8 end:0x8131C500
 
+dolphin/card/CARDBios.c:
+	.text       start:0x81311E08 end:0x81313380
+	.data       start:0x8131BE88 end:0x8131BEE0
+	.sdata      start:0x8131C238 end:0x8131C23C
+	.sbss       start:0x8131C500 end:0x8131C504
+	.bss        start:0x8131D9B0 end:0x8131DBF0
+
 dolphin/card/CARDUnlock.c:
 	.text       start:0x81313380 end:0x813145E0
 	.data       start:0x8131BEE0 end:0x8131C040 align:32

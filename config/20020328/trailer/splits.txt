@@ -170,6 +170,8 @@ dolphin/dsp/dsp_task.c:
 
 dolphin/card/CARDBios.c:
 	.text       start:0x8130E824 end:0x8130FB44
+	.data       start:0x81318718 end:0x81318728
+	.bss        start:0x8131A130 end:0x8131A370
 
 dolphin/card/CARDUnlock.c:
 	.text       start:0x8130FB44 end:0x81310DA4
