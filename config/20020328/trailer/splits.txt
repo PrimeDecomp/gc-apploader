@@ -103,10 +103,13 @@ dolphin/os/__ppc_eabi_init.c:
 	.text       start:0x81305BC0 end:0x81305C54
 
 dolphin/exi/EXIBios.c:
-	.text       start:0x81305C54 end:0x813071A4
+	.text       start:0x81305C54 end:0x81307520
+
+dolphin/exi/EXIUart.c:
+	.text       start:0x81307520 end:0x81307798
 
 dolphin/si/SIBios.c:
-	.text       start:0x813071A4 end:0x8130883C
+	.text       start:0x81307798 end:0x8130883C
 
 dolphin/si/SISamplingRate.c:
 	.text       start:0x8130883C end:0x81308944
