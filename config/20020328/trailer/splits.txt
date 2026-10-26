@@ -37,6 +37,8 @@ dolphin/os/OSAlarm.c:
 
 dolphin/os/OSArena.c:
 	.text       start:0x81302C6C end:0x81302CB8
+	.sdata      start:0x81318C40 end:0x81318C44
+	.sbss       start:0x81318D20 end:0x81318D24
 
 dolphin/os/OSAudioSystem.c:
 	.text       start:0x81302CB8 end:0x81302F4C
