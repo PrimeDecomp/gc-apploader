@@ -3,6 +3,7 @@
 #include "__os.h"
 #include "dolphin/hw_regs.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/os/OSLowMem.h"
 #include "dolphin/pad.h"
 
 static BS2State BootState;
@@ -93,7 +94,7 @@ BS2State BS2Main(void) {
   enabled = OSDisableInterrupts();
   switch (BootState) {
   case BS2_STATE_CHECK_DEVICE:
-    if ((*(u16*)0x800030e4 & 0xeef) != 0xeef) {
+    if ((__OSPad3Buttons & 0xeef) != 0xeef) {
       BootState = BS2_STATE_READ_HEADER;
       break;
     }
@@ -165,7 +166,8 @@ BS2State BS2Main(void) {
   case BS2_STATE_IDLE:
     break;
   default:
-    OSPanic("BS2Mach.c", 0x2d2, "OSReboot(): ERROR >>> UNKNOWN STATE");
+    ASSERTMSGLINE(0x2d2, FALSE, "OSReboot(): ERROR >>> UNKNOWN STATE");
+    break;
   }
   OSRestoreInterrupts(enabled);
   return BootState;

@@ -2,6 +2,7 @@
 #include "__os.h"
 #include "dolphin/base/PPCArch.h"
 #include "dolphin/os.h"
+#include "dolphin/os/OSLowMem.h"
 #include "dolphin/os/OSReset.h"
 #include "dolphin/os/OSTime.h"
 #include <stdlib.h>
@@ -25,7 +26,7 @@ static BOOL BootIsDebugDevice(void) {
   DVDDriveInfo* info;
   OSTime start;
 
-  if ((*(u16*)0x800030e4 & 0xeef) != 0xeef) {
+  if ((__OSLowMemPad.pad3Buttons & 0xeef) != 0xeef) {
     return FALSE;
   }
   info = (DVDDriveInfo*)(((u32)buffer + 31) & ~31);
@@ -36,7 +37,7 @@ static BOOL BootIsDebugDevice(void) {
       __OSDoHotReset(0);
     }
   }
-  *(u16*)0x800030e6 = info->deviceCode | 0x8000;
+  __OSLowMemPad.deviceCode = info->deviceCode | 0x8000;
   return info->deviceCode == 1 ? TRUE : FALSE;
 }
 
@@ -148,14 +149,14 @@ static asm void BootClearFPRs(void) {
 #endif
 
 static void BootResetMemory(void) {
-  OSBootInfo* bootInfo = (OSBootInfo*)0x80000000;
+  OSBootInfo* bootInfo = &__OSBootInfo;
   bootInfo->arenaHi = 0;
   bootInfo->arenaLo = 0;
-  memset((void*)0x80000040, 0, 0x8c);
-  memset((void*)0x800000d4, 0, 0x14);
-  memset((void*)0x800000f4, 0, 4);
-  memset((void*)0x80003000, 0, 0xc0);
-  memset((void*)0x800030c8, 0, 0xc);
+  memset(__OSDebuggerWork, 0, sizeof(__OSDebuggerWork));
+  memset(&__OSLowMemContext, 0, sizeof(__OSLowMemContext));
+  memset(&__OSBootInfo2, 0, sizeof(__OSBootInfo2));
+  memset(&__OSHandlerTables, 0, sizeof(__OSHandlerTables));
+  memset(&__OSModuleState, 0, sizeof(__OSModuleState));
 #if SDK_VERSION < 20040521
   BootClearFPRs();
 #endif

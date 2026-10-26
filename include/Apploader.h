@@ -42,18 +42,6 @@ typedef struct {
   u32 reserved[3];
 } BootBlock2;
 
-typedef struct {
-  u8 discId[0x20];
-  u32 bootMagic;
-  u32 bootVersion;
-  u32 memorySize;
-  u32 consoleType;
-  void* arenaLo;
-  void* arenaHi;
-  void* fstAddress;
-  u32 fstMaxLength;
-} BootInfo;
-
 u32 OSGetConsoleType(void);
 void PPCHalt(void);
 void DCInvalidateRange(void* address, u32 length);

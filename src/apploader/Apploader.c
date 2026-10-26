@@ -1,4 +1,5 @@
 #include "Apploader.h"
+#include "dolphin/os/OSLowMem.h"
 
 #if APPLOADER_VERSION >= 20040521
 #include "dolphin/os/OSExec.h"
@@ -21,14 +22,10 @@
 
 #define ROUND_UP_32(value) (((value) + 31) & ~31)
 #define ROUND_DOWN_32(value) ((value) & ~31)
-#define LOW_MEMORY(type, address) (*(type*)(address))
-#define DEBUG_MONITOR_SIZE LOW_MEMORY(u32, 0x800000e8)
-#define DEBUG_MONITOR_ADDRESS LOW_MEMORY(u32, 0x800000ec)
-#define SIMULATED_MEMORY_SIZE LOW_MEMORY(u32, 0x800000f0)
-#define BOOT_INFO_2 LOW_MEMORY(void*, 0x800000f4)
-#define LOADED_IMAGE_SIZE LOW_MEMORY(u32, 0x800030d4)
-#define PAD_3_BUTTON LOW_MEMORY(u16, 0x800030e4)
-volatile u32 __SIRegs[64] : 0xcc006400;
+#define DEBUG_MONITOR_SIZE (*(u32*)0x800000e8)
+#define DEBUG_MONITOR_ADDRESS (*(u32*)0x800000ec)
+#define SIMULATED_MEMORY_SIZE (*(u32*)0x800000f0)
+volatile u32 __SIRegs[64] AT_ADDRESS(0xcc006400);
 #define SERIAL_REGISTERS __SIRegs
 
 typedef enum {
@@ -192,7 +189,7 @@ static void ApploaderReadController(s32 channel, u32* response) {
 }
 
 u32 OSGetConsoleType(void) {
-  BootInfo* bootInfo = OSPhysicalToCached(0);
+  OSBootInfo* bootInfo = OSPhysicalToCached(0);
   return bootInfo->consoleType;
 }
 
@@ -305,13 +302,13 @@ static void ApploaderCopyArgs(void* src, void* dest) {
 
 static void ApploaderPrepareDisc(void) {}
 
-static void ApploaderSetBootInfo(BootInfo* bootInfo) {
-  bootInfo->bootMagic = 0x0d15ea5e;
-  bootInfo->bootVersion = 1;
+static void ApploaderSetBootInfo(OSBootInfo* bootInfo) {
+  bootInfo->magic = 0x0d15ea5e;
+  bootInfo->version = 1;
   bootInfo->arenaLo = 0;
   bootInfo->arenaHi = DiscLayout.fstAddress;
-  bootInfo->fstAddress = DiscLayout.fstAddress;
-  bootInfo->fstMaxLength = DiscLayout.fstMaxLength;
+  bootInfo->FSTLocation = DiscLayout.fstAddress;
+  bootInfo->FSTMaxLength = DiscLayout.fstMaxLength;
 }
 
 #if APPLOADER_VERSION >= 20040521
@@ -319,7 +316,7 @@ static BOOL ApploaderMainImpl(void** address, u32* length, u32* offset) {
 #else
 BOOL ApploaderMain(void** address, u32* length, u32* offset) {
 #endif
-  BootInfo* bootInfo = OSPhysicalToCached(0);
+  OSBootInfo* bootInfo = OSPhysicalToCached(0);
   u32 limit;
 #if !DEBUG
   u32 monitorSize;
@@ -402,8 +399,8 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
       DiscLayout.fstAddress = (void*)ROUND_DOWN_32(DEBUG_MONITOR_ADDRESS - DiscLayout.fstMaxLength);
 #endif
     }
-    BOOT_INFO_2 = (u8*)DiscLayout.fstAddress - 0x2000;
-    *address = BOOT_INFO_2;
+    __OSBootInfo2 = (u8*)DiscLayout.fstAddress - 0x2000;
+    *address = __OSBootInfo2;
     *length = 0x2000;
     *offset = 0x440;
     LoadState = kLoad_SelectFstOrder;
@@ -417,11 +414,11 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
         DolOffset = DiscLayout.dolOffset;
       }
       if (!ExecParams.argsUseDefault && ExecParams.argsAddr) {
-        ApploaderCopyArgs(ExecParams.argsAddr, BOOT_INFO_2);
+        ApploaderCopyArgs(ExecParams.argsAddr, __OSBootInfo2);
       }
     } else {
       DolOffset = DiscLayout.dolOffset;
-      LOW_MEMORY(u32, 0x800030ec) = 0;
+      __OSReserved30ec = 0;
     }
 #endif
     LoadFstLast = DolOffset < DiscLayout.fstOffset;
@@ -451,9 +448,9 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
   case kLoad_ValidateDol: {
     u32 size = ApploaderGetDolSize();
 #if !DEBUG
-    if ((limit = ((u32*)BOOT_INFO_2)[10])
+    if ((limit = ((u32*)__OSBootInfo2)[10])
 #else
-    limit = ((u32*)BOOT_INFO_2)[10];
+    limit = ((u32*)__OSBootInfo2)[10];
     if (limit
 #endif
 #if APPLOADER_VERSION >= 20040521
@@ -467,9 +464,9 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
            size, size, limit, limit));
     }
     if (LoadFstLast) {
-      LOADED_IMAGE_SIZE = size + ROUND_UP_32(DiscLayout.fstLength);
+      __OSLoadedImageSize = size + ROUND_UP_32(DiscLayout.fstLength);
     } else {
-      LOADED_IMAGE_SIZE = size;
+      __OSLoadedImageSize = size;
     }
 #if APPLOADER_VERSION < 20020328
     APPLOADER_CHECK(Executable.bssAddress + Executable.bssSize <= 0x81200000,
@@ -582,7 +579,7 @@ BOOL ApploaderMain(void** address, u32* length, u32* offset) {
     if (!ExecParams.valid) {
 #endif
       ApploaderReadController(3, response);
-      PAD_3_BUTTON = ((u16*)response)[0];
+      __OSPad3Buttons = ((u16*)response)[0];
 #if APPLOADER_VERSION >= 20040521
     }
 #endif
