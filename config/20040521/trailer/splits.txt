@@ -10,6 +10,10 @@ Sections:
 	.sbss       type:bss align:32
 	.bss        type:bss align:32
 
+trailer/Boot.c:
+	.text       start:0x813003A0 end:0x813006E4
+	.data       start:0x81319940 end:0x81319990
+
 dolphin/PPCArch.c:
 	.text       start:0x813012FC end:0x81301408
 
