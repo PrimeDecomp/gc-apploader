@@ -32,6 +32,7 @@ dolphin/os/OSContext.c:
 
 dolphin/os/OSError.c:
 	.text       start:0x81200B08 end:0x81200CAC
+	.data       start:0x812051F8 end:0x81205460
 
 dolphin/os/OSInterrupt.c:
 	.text       start:0x81201954 end:0x81201E10
@@ -41,6 +42,9 @@ dolphin/os/OSInterrupt.c:
 
 dolphin/os/OSTime.c:
 	.text       start:0x81201E10 end:0x81201E28
+
+runtime/__va_arg.c:
+	.text       start:0x8120209C end:0x81202190
 
 runtime/__mem.c:
 	.init       start:0x81200000 end:0x81200144
